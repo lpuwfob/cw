@@ -1,0 +1,283 @@
+% --------------------------------------------------------------
+% This is all preamble stuff that you don't have to worry about.
+% Head down to where it says "Start here"
+% --------------------------------------------------------------
+ 
+\documentclass[12pt]{article}
+ 
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb,dsfont}
+ 
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+ 
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{reflection}[2][Reflection]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{proposition}[2][Proposition]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+% Created
+\newenvironment{solution}[2][Solution]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\begin{document}
+ 
+% --------------------------------------------------------------
+%                         Start here
+% --------------------------------------------------------------
+ 
+%\renewcommand{\qedsymbol}{\filledbox}
+ 
+\title{Assignment 1 - MH4514 Financial Mathematics}
+\author{Name: \ \ \ \ \ \ \  \underline{\texttt{Honda Naoki}}\\ 
+Matriculation: \underline{\texttt{N1804369J}}} 
+
+\maketitle
+
+\begin{question}{1}
+\end{question}
+
+\begin{solution}[Solution] \\ 
+\flushleft{
+In the presence of a daily dividend, we need to multiply the price by the fraction of non-dividend amount, i.e. $(1-\alpha)$. Therefore we have\\
+}
+
+\begin{eqnarray*}
+S_k^{(1)}= \left\{\begin{array}{lr}
+    (1-\alpha)(1+b)S_{k-1}^{(1)} & \text{if\ } R_k = b \\
+    \\
+    (1-\alpha)(1+a)S_{k-1}^{(1)} & \text{if\ } R_k = a \\
+\end{array}\right\} = (1-\alpha)(1+R_k)S_{k-1}^{(1)}
+\end{eqnarray*}\\ 
+
+\end{solution}
+
+
+\begin{question}{2}
+\end{question}
+\begin{solution}[Solution] \\ 
+\flushleft{Dividend amount at time $k$ can be expressed as follows.\\
+}
+\begin{eqnarray*}
+\text{(Dividend amount)} = \alpha (1+R_k)S_{k-1}^{(1)} \\
+\end{eqnarray*}\\ 
+
+\flushleft{Thus, we can express the dividend amount as a percentage of the ex-dividend price $S_k^{(1)}$ as\\
+}
+\begin{eqnarray*}
+\frac{\text{(Dividend amount)}}{\text{(Ex-dividend price)}} &=& \alpha (1+R_k)S_{k-1}^{(1)} \div S_k^{(1)} \\
+&=& \alpha (1+R_k)S_{k-1}^{(1)} \div (1-\alpha)(1+R_k)S_{k-1}^{(1)} \\
+&=& \frac{\alpha}{(1-\alpha)}
+\end{eqnarray*}\\ 
+
+\newpage
+\flushleft{Next, the return of the risky asset under the risk-neutral probability measure satisfies\\
+}
+\begin{eqnarray*}
+\mathbb{E}^* \left[\frac{S_{k+1}^{(1)}}{1-\alpha} \bigg| \mathcal{F}_k \right]
+&=& \mathbb{E}^* \left[\frac{(1-\alpha)(1+R_{k+1})S_k^{(1)}}{(1-\alpha)} \bigg| \mathcal{F}_k \right] \\
+&=& \mathbb{E}^* \left[(1+R_{k+1})S_k^{(1)} \bigg| \mathcal{F}_k \right] \\
+&=& S_k^{(1)} \left(1+ \mathbb{E}^* \left[R_{k+1} \bigg| \mathcal{F}_k \right] \right)\\
+&=& S_k^{(1)} \left\{ 1+ b\mathbb{P}^* (R_{k+1}=b|\mathcal{F}_k) + a\mathbb{P}^* (R_{k+1}=a | \mathcal{F}_k) \right\} \\
+&=& S_k^{(1)} \left( 1+ b\frac{r-a}{b-a} + a\frac{b-r}{b-a}  \right) \\
+&=& S_k^{(1)} \left( 1+ \frac{1}{b-a} \left( br-ab+ab-ar \right) \right) \\
+&=& S_k^{(1)} \left( 1+ \frac{1}{b-a} r(b-a) \right) \\
+&=& (1+r) S_k^{(1)}
+\end{eqnarray*}\\ 
+\end{solution}
+
+\begin{question}{3}
+\end{question}
+\begin{solution}[Solution]\\ 
+\flushleft{
+From question 1 and 2, at time $k$, the price of portfolio with dividend can be express as\\
+}
+\begin{eqnarray*}
+\xi_k  \left\{ S_k^{(1)} + (\text{dividend}_k) \right\} + \eta_k S_k^{(0)} &=& \xi_k \left\{ S_{k}^{(1)} + \frac{\alpha}{1-\alpha} S_{k}^{(1)} \right\} + \eta_k S_k^{(0)} \\
+&=& \xi_k \frac{S_k^{(1)}}{1-\alpha} + \eta_k S_k^{(0)}
+\end{eqnarray*}\\ 
+
+\flushleft{
+Consider rebalansing this portfolio for the next time step, we change the portfolio strategy from $(\xi_k, \eta_k)$ to $(\xi_{k+1}, \eta_{k+1})$ at time $k$ with the price of portfolio.\\
+In order to condition this as a self-financing strategy, we have to satisfy the following condition.
+}
+\begin{eqnarray*}
+\xi_k \frac{S_k^{(1)}}{1-\alpha} + \eta_k S_k^{(0)} &=& \xi_{k+1} S_k^{(1)} + \eta_{k+1} S_k^{(0)}
+\end{eqnarray*}\\
+
+\flushleft{In addition, $V_N$ can be express as follows}
+\begin{eqnarray*}
+V_N &=& \xi_N \frac{S_N^{(1)}}{1-\alpha} + \eta_N S_N^{(0)}
+\end{eqnarray*}\\
+\end{solution}
+
+\newpage
+\begin{question}{4}
+\end{question}
+\begin{solution}[Solution]\\ 
+\flushleft{
+As $V_N$ is discussed in Question 3, $\Tilde{V}_k$ can be rewritten as below.
+}
+\begin{eqnarray*}
+\Tilde{V}_k &:=& \frac{V_k}{S_k^{(0)}}\\
+&=& \frac{\xi_k S_k^{(1)}/(1-\alpha) + \eta_k S_k^{(0)}}{S_k^{(0)}} = \xi_k \frac{S_k^{(1)}}{(1-\alpha)S_k^{(0)}} + \eta_k \\
+&=& \frac{\xi_{k+1} S_k^{(1)} + \eta_{k+1} S_k^{(0)}}{S_k^{(0)}} = \frac{\xi_{k+1} S_k^{(1)}}{S_k^{(0)}}+\eta_{k+1}
+\end{eqnarray*}\\
+
+\flushleft{Now, under the risk-neutral probability measure $\mathbb{P}^*$, $\Tilde{V}_k$ is a martingale which satisfies $\mathbb{E}^* [\Tilde{V}_{k+1}|\mathcal{F}_k] = \Tilde{V}_k$. \\
+Proof is following, with using the result of Question 2 and predictability of portfolio strategy $(\xi_k, \eta_k)_{k=1,2,...N}$.
+}
+\begin{eqnarray*}
+\mathbb{E}^* \left[ \Tilde{V}_{k+1}|\mathcal{F}_k \right] &=& \mathbb{E}^* \left[ \xi_{k+1} \frac{S_{k+1}^{(1)}}{(1-\alpha)S_{k+1}^{(0)}} + \eta_{k+1} \bigg|\mathcal{F}_k \right]\\
+&=& \frac{\xi_{k+1}}{S_{k+1}^{(0)}} \mathbb{E}^* \left[ \frac{S_{k+1}^{(1)}}{(1-\alpha)} \bigg|\mathcal{F}_k \right] + \eta_{k+1}\\
+&=& \frac{\xi_{k+1}}{S_{k+1}^{(0)}}(1+r) S_k^{(1)} + \eta_{k+1}\\
+&=& \frac{\xi_{k+1}}{(1+r)S_k^{(0)}}(1+r) S_k^{(1)} + \eta_{k+1}\\
+&=& \frac{\xi_{k+1}S_k^{(1)}}{S_k^{(0)}} + \eta_{k+1}\\
+&=& \Tilde{V}_k
+\end{eqnarray*}\\
+
+\end{solution}
+
+
+\begin{question}{5}
+\end{question}
+\begin{solution}[Solution]\\ 
+\flushleft{
+Since the claim $C$ is attainable, there exists a self-financing portfolio strategy $(\xi_k, \eta_k)_{k=1,2,...N}$ such that $C=V_N$, or equivalently $\Tilde{C}=\Tilde{V}_N$.\\
+In addition, from the question 4, the process $(\Tilde{V}_t)_{t=1,2,...,N}$ is a martingale, hence we have
+}
+\begin{eqnarray*}
+\Tilde{V}_k &=& \mathbb{E}^* [\Tilde{V}_{N}|\mathcal{F}_k]= \mathbb{E}^* [\Tilde{C}|\mathcal{F}_k]\\
+\Leftrightarrow V_k &=& \frac{1}{(1+r)^{N-k}} \mathbb{E}^* [C|\mathcal{F}_k] 
+\end{eqnarray*}\\
+\end{solution}
+
+\newpage
+\begin{question}{6}
+\end{question}
+\begin{solution}[Solution]\\ 
+\flushleft{
+From the definition of the pricing function $C_0$, we know that we need to specify the variables of $k$ and $x$.\\
+For $k$, it is easy to see substituting $t$ into $k$ will do the job.\\
+For $x$, compare the payoff function and treat $l$ as the number of event $R_i=b$ happened from time $k$ to $N$, we have
+}
+
+\begin{eqnarray*}
+h(S_N^{(1)}) &=& h\left(x(1+b)^l (1+a)^{N-k-l}\right) \\
+&=& h\left(x \prod^{N}_{i=k+1} (1+R_i) \right) \\
+S_N^{(1)} &=& x \prod^{N}_{i=k+1} (1+R_i) \\
+x &=& \frac{S_N^{(1)}}{\prod^{N}_{i=k+1} (1+R_i)} = S_k^{(1)}
+\end{eqnarray*}\\
+\flushleft{
+Hence we have
+}
+\begin{eqnarray*}
+V_t &=& C_0(t,S_t^{(1)},N,a,b,r) \\
+&=& \frac{1}{(1+r)^{N-t}} \sum^{N-t}_{l=0} \binom{N-t}{l} (p^*)^l (q^*)^{N-t-l} h\left(S_t^{(1)}(1+b)^l (1+a)^{N-t-l}\right)
+\end{eqnarray*}
+\end{solution}
+
+
+\begin{question}{7}
+\end{question}
+\begin{solution}[Solution]\\ 
+\flushleft{
+From the question 2, with tower property we have\\
+}
+\begin{eqnarray*}
+(1+r) S_k^{(1)} &=& \mathbb{E}^* \left[\frac{S_{k+1}^{(1)}}{1-\alpha} \bigg| \mathcal{F}_k \right] \\
+S_k^{(1)} &=& \left( \frac{1}{(1-\alpha)(1+r)} \right) \mathbb{E}^* \left[S_{k+1}^{(1)} \bigg| \mathcal{F}_k \right] \\
+S_k^{(1)} &=& \left( \frac{1}{(1-\alpha)(1+r)} \right)^2 \mathbb{E}^* \left[ \mathbb{E}^* [S_{k+2}^{(1)} | \mathcal{F}_{k+1} ] \bigg| \mathcal{F}_k \right] \\
+S_k^{(1)} &=& \left( \frac{1}{(1-\alpha)(1+r)} \right)^2 \mathbb{E}^* \left[ S_{k+2}^{(1)} \bigg| \mathcal{F}_k \right] \\
+&\vdots& \\
+S_k^{(1)} &=& \left( \frac{1}{(1-\alpha)(1+r)} \right)^{N-k} \mathbb{E}^* \left[ S_{N}^{(1)} \bigg| \mathcal{F}_k \right]
+\end{eqnarray*}
+
+\flushleft{
+Whereas for the risky asset without dividend, we have\\
+}
+\begin{eqnarray*}
+S_k^{(1)} &=& \frac{1}{(1+r)^{N-k}} \mathbb{E}^* \left[ S_{N}^{(1)} \bigg| \mathcal{F}_k \right]
+\end{eqnarray*}
+
+\flushleft{
+By comparing the two, we know that we need to adjust $C_0(k,S_k^{(1)},N,a,b,r)$ by multiplying $(1-\alpha)^{N-k}$, therefore we have\\
+}
+\begin{eqnarray*}
+C_{\alpha}(k,S_k^{(1)},N,a_{\alpha},b_{\alpha},r_{\alpha}) = (1-\alpha)^{N-k} C_0(k,S_k^{(1)},N,a_{\alpha},b_{\alpha},r_{\alpha})
+\end{eqnarray*}
+\end{solution}
+
+\begin{question}{8}
+\end{question}
+\begin{solution}[Solution]\\ 
+\flushleft{
+From the question 4, we know that the discounted portfolio price process $(\Tilde{V}_k)_{k=0,1,...,N}$ is a martingale, and $C_{\alpha}$ is a Markov process so that we have
+}
+\begin{eqnarray*}
+\Tilde{V}_k &=& \mathbb{E}^* \left[\Tilde{V}_{k+1} \bigg| \mathcal{F}_k \right] \\
+\frac{V_k}{S_k^{(0)}} &=& \mathbb{E}^* \left[\frac{V_{k+1}}{S_{k+1}^{(0)}} \bigg| \mathcal{F}_k \right] \\
+(1+r) V_k &=& \mathbb{E}^* \left[V_{k+1} \bigg| \mathcal{F}_k \right] \\
+(1+r) C_{\alpha}(k,S_k^{(1)},N,a_{\alpha},b_{\alpha},r_{\alpha}) &=& \mathbb{E}^* \left[C_{\alpha}(k+1,S_{k+1}^{(1)},N,a_{\alpha},b_{\alpha},r_{\alpha}) \bigg| \mathcal{F}_k \right] = \mathbb{E}^* \left[ \cdot | S_k \right]\\
+(1+r) C_{\alpha}(k,S_k^{(1)},N,a_{\alpha},b_{\alpha},r_{\alpha}) &=& q^*C_{\alpha}(k+1,S_k^{(1)}(1+a),N,a_{\alpha},b_{\alpha},r_{\alpha}) \\
+& & + p^* C_{\alpha}(k+1,S_k^{(1)}(1+b),N,a_{\alpha},b_{\alpha},r_{\alpha})
+\end{eqnarray*}
+
+\end{solution}
+
+\begin{question}{9}
+\end{question}
+\begin{solution}[Solution]\\ 
+\flushleft{
+As discussed in question 4 and 7, we have\\
+}
+\begin{eqnarray*}
+\Tilde{V}_k &=& \xi_k \frac{S_k^{(1)}}{(1-\alpha)S_k^{(0)}} + \eta_k \\
+&=& \frac{(1-\alpha)^{N-k}}{S_k^{(0)}} C_0(k,S_k^{(1)},N,a_{\alpha},b_{\alpha},r_{\alpha})
+\end{eqnarray*}\\
+
+\flushleft{
+From which we deduce the two equations\\
+}
+\begin{eqnarray*}
+\begin{cases}
+\xi_k (1+a)S_{k-1}^{(1)} + \eta_k = (1-\alpha)^{N-k} C_0(k,(1-\alpha)(1+a)S_{k-1}^{(1)},N,a_{\alpha},b_{\alpha},r_{\alpha}) \\
+\xi_k (1+b)S_{k-1}^{(1)} + \eta_k = (1-\alpha)^{N-k} C_0(k,(1-\alpha)(1+b)S_{k-1}^{(1)},N,a_{\alpha},b_{\alpha},r_{\alpha})
+\end{cases}\\
+\end{eqnarray*}\\
+
+\flushleft{
+Now, think of $\xi_k$ as a function of $S_{k-1}^{(1)}$, and solve previous equations for $\xi_k$, we have \footnote{Here, following variables $N, a_{\alpha},b_{\alpha},r_{\alpha}$ of $C_0$ are omitted for the sake of simplicity}\\
+}
+\begin{eqnarray*}
+\xi_k \left( S_{k-1}^{(1)} \right) = \frac{(1-\alpha)^{N-k} \{C_0(k,(1-\alpha)(1+b)S_{k-1}^{(1)})- C_0(k,(1-\alpha)(1+a)S_{k-1}^{(1)})\}}{(b-a)S_{k-1}^{(1)}}
+\end{eqnarray*}
+\end{solution}
+
+\begin{question}{10}
+\end{question}
+\begin{solution}[Solution]\\ 
+\flushleft{
+Consider the quantity of risky asset $(\xi_k)_{k=1,2,...,N}$ from the Question 9, the dividend rate $\alpha$ works as a shrinking term which decreases $\xi_k$ since $0<(1-\alpha)^{N-k}\leq1$ for $k=1,2,...,N$. \\
+\ \\
+Thus, in the presence of a daily dividend rate $\alpha>0$, the rate investing on the risky assets with dividend tends to decrease, compared with a risky asset without dividend. \\
+In other words, the dividend is more likely to be reinvested more into the riskless asset than the risky asset. \\
+\ \\
+In addition, as time proceeds (i.e. $k$ increases), the shrinking term gets closer to 1 ($\lim_{k \to N} (1-\alpha)^{N-k} = 1$), meaning the rate at which the shrinking term adjusts the dividend reinvested in risky asset in each time steps increases every time. 
+}
+\end{solution}
+
+% --------------------------------------------------------------
+% You don't have to mess with anything below this line.
+% --------------------------------------------------------------
+ 
+\end{document}

@@ -1,0 +1,703 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{bold-extra}
+\usepackage[pdfauthor={Luciano Henrique de Oliveira Santos}]{hyperref}
+\usepackage[right=2.5cm,left=2.5cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{setspace}
+\usepackage[export]{adjustbox}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{listings}
+\usepackage{textcomp}
+\usepackage[ruled, vlined]{algorithm2e}
+\usepackage{tikz,forest}
+\usetikzlibrary{arrows.meta}
+\usepackage{datetime}
+\newdateformat{monthyeardate}{%
+  \monthname[\THEMONTH], \THEYEAR}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\title{Subway Sandwich Interactor in Prolog}
+\author{Naoki Honda (N1804369J)}
+\date{\monthyeardate\today}
+
+\newcommand{\varname}[1]{\texttt{#1}}
+\newcommand{\varnameit}[1]{\textit{\texttt{#1}}}
+\newcommand{\varnamebf}[1]{\textbf{\texttt{#1}}}
+\newcommand{\varnamebfit}[1]{\textbf{\textit{\texttt{#1}}}}
+
+\newcommand{\predprot}[2]{{\color{MidnightBlue}\varnamebf{#1}}/{\color{Mulberry}\varname{#2}}}
+\newcommand{\predname}[1]{{\color{MidnightBlue}\varname{#1}}}
+\newcommand{\And}{\textbf{and}}
+\newcommand{\Not}{\textbf{not}}
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{constraint}{Constraint}[section]
+
+
+% --- ugly internals for language definition ---
+% see: http://tex.stackexchange.com/questions/161235/can-the-listings-package-be-set-up-to-highlight-prolog-code-like-minted-does
+%
+\makeatletter
+
+\newcommand\PrologPredicateStyle{}
+\newcommand\PrologVarStyle{}
+\newcommand\PrologAnonymVarStyle{}
+\newcommand\PrologOpStyle{}
+\newcommand\PrologAtomStyle{}
+\newcommand\PrologOtherStyle{}
+\newcommand\PrologCommentStyle{}
+
+
+% useful switches (to keep track of context)
+
+\newif\ifpredicate@prolog@
+\newif\ifwithinparens@prolog@
+
+% save definition of underscore for test
+\lst@SaveOutputDef{`_}\underscore@prolog
+
+% local variables
+\newcount\currentchar@prolog
+
+\newcommand\@testChar@prolog%
+{%
+  % if we're in processing mode...
+  \ifnum\lst@mode=\lst@Pmode%
+    \detectTypeAndHighlight@prolog%
+  \else
+    % ... or within parentheses
+    \ifwithinparens@prolog@%
+      \detectTypeAndHighlight@prolog%
+    \fi
+  \fi
+  % Some housekeeping...
+  \global\predicate@prolog@false%
+}
+
+% helper macros
+\newcommand\detectTypeAndHighlight@prolog
+{%
+  % First, assume that we have an atom.
+  \def\lst@thestyle{\PrologAtomStyle}%
+  % Test whether we have a predicate and modify the style accordingly.
+  \ifpredicate@prolog@%
+    \def\lst@thestyle{\PrologPredicateStyle}%
+  \else
+    % Test whether we have a predicate and modify the style accordingly.
+    \expandafter\splitfirstchar@prolog\expandafter{\the\lst@token}%
+    % Check whether the identifier starts by an underscore.
+    \expandafter\ifx\@testChar@prolog\underscore@prolog%
+      % Check whether the identifier is '_' (anonymous variable)
+      \ifnum\lst@length=1%
+        \let\lst@thestyle\PrologAnonymVarStyle%
+      \else
+        \let\lst@thestyle\PrologVarStyle%
+      \fi
+    \else
+      % Check whether the identifier starts by a capital letter.
+      \currentchar@prolog=65
+      \loop
+        \expandafter\ifnum\expandafter`\@testChar@prolog=\currentchar@prolog%
+          \let\lst@thestyle\PrologVarStyle%
+          \let\iterate\relax
+        \fi
+        \advance \currentchar@prolog by 1
+        \unless\ifnum\currentchar@prolog>90
+      \repeat
+    \fi
+  \fi
+}
+\newcommand\splitfirstchar@prolog{}
+\def\splitfirstchar@prolog#1{\@splitfirstchar@prolog#1\relax}
+\newcommand\@splitfirstchar@prolog{}
+\def\@splitfirstchar@prolog#1#2\relax{\def\@testChar@prolog{#1}}
+
+% helper macro for () delimiters
+\def\beginlstdelim#1#2%
+{%
+  \def\endlstdelim{\PrologOtherStyle #2\egroup}%
+  {\PrologOtherStyle #1}%
+  \global\predicate@prolog@false%
+  \withinparens@prolog@true%
+  \bgroup\aftergroup\endlstdelim%
+}
+
+% language name
+\newcommand\lang@prolog{Prolog-pretty}
+% ``normalised'' language name
+\expandafter\lst@NormedDef\expandafter\normlang@prolog%
+  \expandafter{\lang@prolog}
+
+% language definition
+\expandafter\expandafter\expandafter\lstdefinelanguage\expandafter%
+{\lang@prolog}
+{%
+  language            = Prolog,
+  keywords            = {},      % reset all preset keywords
+  showstringspaces    = false,
+  alsoletter          = (,
+  alsoother           = @$,
+  moredelim           = **[is][\beginlstdelim{(}{)}]{(}{)},
+  MoreSelectCharTable =
+    \lst@DefSaveDef{`(}\opparen@prolog{\global\predicate@prolog@true\opparen@prolog},
+}
+
+% Hooking into listings to test each ``identifier''
+\newcommand\@ddedToOutput@prolog\relax
+\lst@AddToHook{Output}{\@ddedToOutput@prolog}
+
+\lst@AddToHook{PreInit}
+{%
+  \ifx\lst@language\normlang@prolog%
+    \let\@ddedToOutput@prolog\@testChar@prolog%
+  \fi
+}
+
+\lst@AddToHook{DeInit}{\renewcommand\@ddedToOutput@prolog{}}
+
+\makeatother
+%
+% --- end of ugly internals ---
+
+
+% redefinition of user macros for Prolog style
+\renewcommand\PrologPredicateStyle{\color{MidnightBlue}}
+\renewcommand\PrologVarStyle{\color{ForestGreen}}
+\renewcommand\PrologAnonymVarStyle{\color{Magenta}}
+\renewcommand\PrologOpStyle{\color{Magenta}}
+\renewcommand\PrologAtomStyle{\color{YellowOrange}}
+\renewcommand\PrologCommentStyle{\itshape\color{Gray}}
+\renewcommand\PrologOtherStyle{\color{Black}}
+
+% custom style definition
+\lstdefinestyle{Prolog-pygsty}{
+  language     = Prolog-pretty,
+  upquote      = true,
+  stringstyle  = \PrologAtomStyle,
+  commentstyle = \PrologCommentStyle,
+  literate     =
+    {:-}{{\PrologOpStyle :- }}2
+    {,}{{\PrologOtherStyle ,}}1
+    {.}{{\PrologOtherStyle .}}1
+    {0}{{{\PrologAtomStyle{0}}}}1
+    {1}{{{\PrologAtomStyle{1}}}}1
+    {2}{{{\PrologAtomStyle{2}}}}1
+    {3}{{{\PrologAtomStyle{3}}}}1
+    {4}{{{\PrologAtomStyle{4}}}}1
+    {5}{{{\PrologAtomStyle{5}}}}1
+    {6}{{{\PrologAtomStyle{6}}}}1
+    {7}{{{\PrologAtomStyle{7}}}}1
+    {8}{{{\PrologAtomStyle{8}}}}1
+    {9}{{{\PrologAtomStyle{9}}}}1
+}
+
+
+\lstset{
+}
+
+% global settings
+\lstset{
+  captionpos = below,
+  frame      = single,
+  columns    = fullflexible,
+  basicstyle = \scriptsize\ttfamily,
+}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+This is the documentation for a simple script in SWI-Prolog that interacts with customers as a waitress of the Subway \footnote{\url{https://www.subway.com/en-US} (accessed on November, 2018)}. To start, enter "\predname{order.}" \\
+The prolog script offers different meal options (sandwich options, meat options, salad options, sauce options, top-up options, sides options etc.) to create a customized list of person’s choice. The agent will intelligently select the option based on previous choices. For example, if the person chose a veggie meal, meat options will not be offered. If a customer chose healthy meal, fatty sauces will not be offered. If a customer chose vegan meal, cheese top-up will not be offered. If a person chose value meal, no toppings will be offered.
+
+
+\ \\ 
+\ \\ 
+The following assumptions were observed in this implementation to make it simple:
+\begin{itemize}
+    \item no abortion until it's done -- This agent assume that the customer will always be there until the order is done. Since there's no implementation that deals with the abortion in case the customer changes his/her mind, only way to stop the interaction before finished is to close the window;
+    
+    \item sauce order has up to 2 choices -- Customer can order sauce up to 2 kinds;
+    
+    \item multiple veggies order -- The agent allows customers to order veggies as many as they want;
+    
+    \item no multiple order for other categories -- for other orders, (meals, breads, meats, toppings, sides be specific,) the agent will not allow customers to order more than 1 choice.
+\end{itemize}
+\ \\ 
+\ \\ 
+
+
+
+The sections below describe the rationale and the details of this implementation. Section \ref{sec:option} shows how the agent outputs all the available options for a specific customer, taking care of the previous orders. Section \ref{sec:order} explains how the agent asks order and store the choice into its 'Knowledge Base'. Section \ref{sec:display} describes how the knowledge acquired from the customer is displayed at the end of the interaction. Finally, Section \ref{sec:conc} explains the problems that we faced as we build the agent, and current defects for further extension.\\ 
+
+
+\newpage
+\section{Showing available options}
+\label{sec:option}
+
+For this implementation, there are several categories of order and each of them has its options. Here's all the available options.
+
+\ \\ 
+\begin{itemize}
+    \item \textbf{meals} -- healthy, normal, value, vegan, veggie;
+    \item \textbf{breads} -- italian\_wheat, hearty\_italian, honey\_oat, parmesan\_oregano, multigrain, flatbread;
+    \item \textbf{meats} -- chicken, beef, ham, bacon, salmon, tuna, turkey;
+    \item \textbf{veggies} -- cucumbers, green\_bell\_peppers, lettuce, red\_onions, tomatoes, black\_olives, jalapenos, pickles;
+    \item \textbf{toppings}:
+        \subitem $*$ \textbf{cheese} -- processed\_cheddar, monterey\_cheddar;
+        \subitem $*$ \textbf{others} -- avocado, bacon, pepperoni;
+    \item \textbf{sauce}:
+        \subitem $*$ \textbf{fatty} -- chipotle, bbq, ranch, chilli, mayo;
+        \subitem $*$ \textbf{non-fatty} -- tomato, honey\_mustard, sweet\_onion;
+    \item \textbf{sides}     -- chips, cookies, hashbrowns, soup, drinks.
+\end{itemize}
+\ \\ 
+
+
+\subsection{Declaration of the predicates}
+
+The following predicates are to show the options:
+\begin{itemize}
+    \item \predprot{index\_recur}{2} (Figure \ref{fig:indexrecur}) -- is recursive predicate. Given the starting number as its first argument (when implemented, the start number is always set to be 1 since we want to show from the first one in the list) and the list we want to show as its second argument, it will show each elements with index number one by one until all the elements in the list are shown, and at the end, it will write "\textit{Type number of your choice}" in the console;
+    
+    \item \predprot{index\_recur\_without\_chosen}{2} (Figure \ref{fig:indexrecurwithout}) -- is also defined recursively to show all the options except ones that are already chosen by the customer, given the list of chosen index numbers as its first argument. It will be used to define the next predicate of \predname{show\_options\_without\_chosen};
+    
+    \item \predprot{show\_options\_without\_chosen}{2} (Figure \ref{fig:showwithout}) -- Given the list of chosen number and list of options, it will output all the options that are not selected yet. It should always be used after calling the list of options. \\ 
+    (for example, "\textit{veggies(Veg\_List), show\_options\_without\_chosen(Chosen\_List, Veg\_List)}", 
+    \  This set of code will show all veggies options without ones already chosen.).
+\end{itemize}
+
+\newpage
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+% Define index_recur
+index_recur(Last, List):- 
+    length(List, Length), 
+    Last is Length + 1,
+    write('Type number of your choice:').
+
+index_recur(Index, List):- 
+    nth1(Index, List, Elem),
+    format('~w: ~w ~n', [Index, Elem]),
+    Next is Index + 1,
+    index_recur(Next, List).
+\end{lstlisting}
+	\caption{The declaration of the predicate \predname{index\_recur}} 
+	\label{fig:indexrecur}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+% Define index_recur_without_chosen
+index_recur_without_chosen([], _) :- 
+    write('Type number of your choice:').
+
+index_recur_without_chosen([Head|Tail], List):-
+    nth1(Head, List, Elem),
+    format('~w: ~w ~n', [Head, Elem]),
+    index_recur_without_chosen(Tail, List).
+\end{lstlisting}
+	\caption{The declaration of the predicate \predname{index\_recur\_without\_chosen}} 
+	\label{fig:indexrecurwithout}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+% Define show_options_without_chosen
+show_options_without_chosen(Chosen_List, Option_List) :- 
+    findall(X,
+            (	
+            	length(Option_List, Y),
+                between(1, Y, X),
+                integer(X),
+                \+ member(X, Chosen_List)
+            ),
+            Without_chosen),
+    index_recur_without_chosen(Without_chosen, Option_List).
+\end{lstlisting}
+	\caption{The declaration of the predicate \predname{show\_options\_without\_chosen}} 
+	\label{fig:showwithout}
+\end{figure}
+
+\subsection{Implementation}
+
+Based on the assumptions, the agent will only need to show the entire list once and no longer need to show more than once for orders of \textbf{meals}, \textbf{breads}, \textbf{meats}, \textbf{toppings}, \textbf{sides}. For those categories, we will use \predname{index\_recur} with calling each list and setting the start number of \predname{index\_recur} as 1 (Figure \ref{fig:showonce}). \\ 
+
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+% Showing all meats options
+meals(Meal_List), index_recur(1, Meal_List).
+\end{lstlisting}
+	\caption{Example: showing meat options with \predname{index\_recur}} 
+	\label{fig:showonce}
+\end{figure}
+
+\newpage
+For \textbf{veggies}, we need to show not only the entire possible options at first, but also the options without chosen ones consecutively until the customer says it's done. For the first time, we will use the same exact implementation as we previously discussed, but for the second and after, we will use \predname{index\_recur\_without\_chosen}, and \predname{show\_options\_without\_chosen} and other predicates we will define in the following sections, so the actual code of implementation will be discussed in Section \ref{sec:order}.\\ 
+
+Same goes for \textbf{veggies}, we will discuss it in Section \ref{sec:order}.
+
+
+\section{Taking order}
+\label{sec:order}
+
+This section describes how the agent ask order and inputs the customer's order into its "Knowledge Base", and how it then uses that knowledge to intelligently show the next option for a specific customer.
+
+\subsection{Declaration of the predicates}
+
+The following predicates are to input customer's order into the Knowledge Base:
+\begin{itemize}
+    \item \predprot{read\_only}{2} (Figure \ref{fig:readonly}) -- will only accept customer's input which is in the shown list. It needs the list shown to the customer as its first argument, and it returns accepted output in the second argument. It will restart from the beginning if the input is not the number in the shown list;
+    
+    \item \predprot{\~{}\~{}\_option}{1} (Figure \ref{fig:readoption}) -- is the predicate to pass customer's input to the knowledge base. It requires input as an index number of the list, and with that number, it will specifies the ordered element and store it to the knowledge base.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+% Define read_only
+read_only(Specified_List, X):- 
+    read(Input),
+    (
+        integer(Input)
+        ->  ((length(Specified_List, Y), between(1, Y, Input))
+            ->  (Input = X);
+        (writeln('Please answer in the numbers in the list: '), read_only(Specified_List, X)));
+    writeln('Please answer in the numbers in the list')
+    ),
+    read_only(Specified_List, X).
+\end{lstlisting}
+	\caption{The declaration of the predicate \predname{read\_only}} 
+	\label{fig:readonly}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+% Define all ~~~_option
+meal_option(Input)    :- meals(L), nth1(Input, L, Elem), assertz(selected_meal(Elem)).
+bread_option(Input)   :- breads(L), nth1(Input, L, Elem), assertz(selected_bread(Elem)).
+meat_option(Input)    :- meats(L), nth1(Input, L, Elem), assertz(selected_meat(Elem)).
+veggie_option(Input)  :- veggies(L), nth1(Input, L, Elem), assertz(selected_veggies(Elem)).
+topping_option(Input) :- topping_cheese(L1), topping_non_cheese(L2), 
+    					 append(L1, L2, L), nth1(Input, L, Elem), 
+    					 assertz(selected_topping(Elem)).
+sauce_option(Input)   :- sauce_fatty(L1), sauce_non_fatty(L2), 
+    					 append(L1, L2, L), nth1(Input, L, Elem), 
+    					 assertz(selected_sauce(Elem)).
+side_option(Input)    :- sides(L), nth1(Input, L, Elem), assertz(selected_side(Elem)).
+
+\end{lstlisting}
+	\caption{The declaration of the predicates \predname{\~{}\~{}\_option}} 
+	\label{fig:readoption}
+\end{figure}
+
+
+
+
+
+\newpage
+\subsection{Implementation}
+
+\subsubsection{General use}
+\label{sec:general}
+
+In general case, (for \textbf{meals}, \textbf{breads}, \textbf{meats}, \textbf{toppings}, \textbf{sides}) \predname{read\_only} and \predname{\~{}\~{}\_option} are used after showing all the option as we discussed in Section \ref{sec:option}. In figure \ref{fig:general}, we pick \textbf{meals} as an example. \\ 
+
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+% Showing all meats options
+meals(Meal_List), index_recur(1, Meal_List),
+
+% After showing all options, 
+% Read customer's input, but only if it is in the Meat_List
+read_only(Meal_List, Meal), meal_option(Meal).
+\end{lstlisting}
+	\caption{Example: showing meat options with \predname{index\_recur}} 
+	\label{fig:general}
+\end{figure}
+
+
+\subsubsection{Veggie order}
+\label{sec:veg-order}
+
+Unlike the general case, taking \textbf{veggies} order is quite complicated due to the fact that the agent needs to ask the customer as many times as the customer wants. Thus, with using \predname{show\_options\_without\_chosen} in Section \ref{sec:option}, we created specific predicates only for the \textbf{veggies} order. \\ 
+
+\begin{itemize}
+    \item \predprot{read\_only\_without\_chosen}{3} (Figure \ref{fig:read-without}) -- is similar to the \predname{read\_only}, but the difference is that it only allows the input of index number which is in the shown list. Given the list of chosen index numbers and list of all possible choice, it will read the input and return as its third argument. To make it more general and available to use in the \textbf{sauce} order as well, we let this has the first and second argument. Therefore, it is supposed to used after calling chosen list and option list with using \predname{findall} and possible choice list. (Example is in Figure \ref{fig:read-without});
+    
+    \item \predprot{get\_veg\_option}{0} (Figure \ref{fig:get-veg-op}) -- will input customer's order with using\\
+    \predname{read\_only\_without\_chosen}, and store the knowledge of order into the knowledge base;
+    
+    \item \predprot{ask\_next\_veg}{0} (Figure \ref{fig:ask-next-veg}) -- will ask whether the customer wants more veggies or not. It will restart with writing "Please answer in "y" or "n" :" in the console when the customer's input is neither "y" nor "n". When it is "y", it will restart the ordering process with executing \predname{multiple\_choice\_veg} which will be explained later. If the input is "n", it will finish the \textbf{veggies} order and proceed to the next order;
+    
+    \item \predprot{multiple\_choice\_veg}{0} (Figure \ref{fig:multiple-choice-veg}) -- is just the combination of \predname{get\_veg\_option} and \predname{ask\_next\_veg} so that its definition is rather simple. However, despite its simple declaration, it plays an important role of restarting ordering process, can be seen in the declaration of \predname{ask\_next\_veg}. (Figure \ref{fig:ask-next-veg}) Without this predicate, the agent will fail to ask consecutive order.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+% Define read_only_without_chosen
+read_only_without_chosen(Chosen_List, Option_List, X):- 
+    findall(B,
+            (length(Option_List, Y),
+             between(1, Y, B),
+             integer(B),
+             \+ member(B, Chosen_List)), Without_chosen),
+    read(Input),
+    (   
+    	integer(Input)
+    		->  (   
+                	(member(Input, Without_chosen))
+    				->  (Input = X);
+    				(   
+                		writeln('Please answer in the numbers in the list: '),
+        				read_only_without_chosen(Chosen_List, Option_List, X)
+                	)
+                );
+    		writeln('Please answer in the numbers in the list'),
+        	read_only_without_chosen(Chosen_List, Option_List, X)
+    ).
+    
+% Example use, read only the input that is not ordered yet
+findall(A,selected_veggies_index(A), Chosen_List), veggies(Veg_List),
+readread_only_without_chosen(Chosen_List, Veg_List, X),
+% Only the accepted order will be stored in the knowledge base
+veggie_option(X).
+
+\end{lstlisting}
+	\caption{The declaration of the predicate \predname{read\_only\_without\_chosen} and its example use} 
+	\label{fig:read-without}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+% Define get_veg_option
+get_veg_option:-
+    findall(A,selected_veggies_index(A), Chosen_List),
+    veggies(Veg_List),
+    read_only_without_chosen(Chosen_List, Veg_List, Input),
+    
+    veggie_option(Input),
+    assertz(selected_veggies_index(Input)),
+    writeln('Do you want to add more? (Answer in \"y\" or \"n\") :').
+\end{lstlisting}
+	\caption{The declaration of the predicate \predname{get\_veg\_option}} 
+	\label{fig:get-veg-op}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+% Define ask_next_veg
+ask_next_veg:-
+	read(Answer),
+    (   
+    	Answer == y ->  findall(A,selected_veggies_index(A), Chosen_List),
+        				veggies(Veg_List),
+    					show_options_without_chosen(Chosen_List, Veg_List),
+        				multiple_choice_veg;
+    	Answer == n -> true;
+    	write('Please answer in \"y\" or \"n\" :'), ask_next_veg
+    ).
+\end{lstlisting}
+	\caption{The declaration of the predicate \predname{ask\_next\_veg}} 
+	\label{fig:ask-next-veg}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+% Define multiple_choice_veg
+multiple_choice_veg:-
+    get_veg_option,
+    ask_next_veg.
+\end{lstlisting}
+	\caption{The declaration of the predicate \predname{multiple\_choice\_veg}} 
+	\label{fig:multiple-choice-veg}
+\end{figure}
+
+\subsubsection{Sauce order}
+\label{sec:sauce-order}
+
+\textbf{Sauce} order is somewhat easier than the \textbf{veggies} order because it will be up to 2 choice, but we need to make couple of predicates for this specific order.\\ 
+
+
+\begin{itemize}
+    \item \predprot{ask\_next\_sauce\_non\_fat}{0} (Figure \ref{fig:ask-sauce-nonfat}) -- is almost the same as \predname{ask\_next\_veg}, except chosen list and option list are derived from \textbf{sauce\_non\_fatty} list;
+    
+    \item \predprot{ask\_next\_sauce}{0} (Figure \ref{fig:ask-sauce}) -- is just the entire sauce (fatty and non fatty) version of \predname{ask\_next\_sauce\_non\_fat}.
+\end{itemize}
+
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+% Define ask_next_sauce_non_fat
+ask_next_sauce_non_fat:-
+	read(Answer),
+    (
+	Answer == y -> (findall(A,selected_sauce_index(A), Chosen_List),
+                    sauce_non_fatty(Sauce_non_fatty_List),
+                    show_options_without_chosen(Chosen_List, Sauce_non_fatty_List),
+                     
+                    read_only_without_chosen(Chosen_List, Sauce_non_fatty_List, Sauce_non_fat_2),
+                    sauce_option(Sauce_non_fat_2));
+	Answer == n -> true;
+	write('Please answer in \"y\" or \"n\"'), ask_next_sauce_non_fat
+    ).
+\end{lstlisting}
+	\caption{The declaration of the predicate \predname{ask\_next\_sauce\_non\_fat}} 
+	\label{fig:ask-sauce-nonfat}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+% Define ask_next_sauce
+ask_next_sauce:-
+	read(Answer),
+    (
+	Answer == y ->  findall(A,selected_sauce_index(A), Chosen_List),
+                    (sauce_fatty(Sauce_fatty_List),
+                     sauce_non_fatty(Sauce_non_fatty_List),
+                     append(Sauce_fatty_List, Sauce_non_fatty_List, Sauce_List),
+                     show_options_without_chosen(Chosen_List, Sauce_List),
+                        
+            		 read_only_without_chosen(Chosen_List, Sauce_List, Sauce_2),
+            		 sauce_option(Sauce_2));
+	Answer == n -> true;
+	write('Please answer in \"y\" or \"n\"'), ask_next_sauce
+    ).
+\end{lstlisting}
+	\caption{The declaration of the predicate \predname{ask\_next\_sauce}} 
+	\label{fig:ask-sauce}
+\end{figure}
+
+
+\section{Displaying the order summary}
+\label{sec:display}
+
+In this section, how the agent will display the order summary will be explained.
+
+\subsection{Declaration of the predicates}
+
+Displaying the order summary is the easiest part of this agent. We only need to create one simple predicate \predname{write\_list}.
+
+\begin{itemize}
+    \item \predprot{write\_list}{1} (Figure \ref{fig:write-list}) -- Given an input of a list, it will write down the elements in the list with the index number in the console.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+% Define write_list
+write_list([]).
+write_list([Head|Tail]):-
+    (length([Head|Tail], 1), format('~w ~n', [Head]));
+    (format('~w, ', Head), write_list(Tail)).
+\end{lstlisting}
+	\caption{The declaration of the predicate \predname{write\_list}} 
+	\label{fig:write-list}
+\end{figure}
+
+\subsection{Implementation}
+Since the agent already have all the order in its knowledge base, with using \predname{write\_list} and couple of built-in predicates, displaying the order summary can be implemented in a quite simple way. In this way, all the order categories can be summarized so that we do not need to build some specific predicate neither. Here's the actual code (Figure \ref{fig:display-ex}).
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+writeln('Here\'s your order. Check if anything\'s wrong.'),
+
+findall(A, (selected_meal(A), meals(ListA), member(A, ListA)), Order_meal),
+write('Meal: '), write_list(Order_meal), nl,
+    
+findall(B, (selected_bread(B), breads(ListB), member(B, ListB)), Order_bread),
+write('Bread: '), write_list(Order_bread), nl,
+    
+findall(C, (selected_meat(C), meats(ListC), member(C, ListC)), Order_meat),
+write('Meat: '), write_list(Order_meat), nl,
+    
+findall(D, (selected_veggies(D), veggies(ListD), member(D, ListD)), Order_veggie),
+write('Veggies: '), write_list(Order_veggie), nl,
+    
+findall(E, (selected_topping(E),
+            topping_cheese(LT1), topping_non_cheese(LT2),
+            append(LT1, LT2, ListE),
+            member(E, ListE)), Order_topping),
+write('Toppings: '), write_list(Order_topping),
+   
+findall(F, (selected_sauce(F),
+            sauce_fatty(LS1), sauce_non_fatty(LS2),
+            append(LS1, LS2, ListF),
+            member(F, ListF)), Order_sauce),
+write('Sauce: '), write_list(Order_sauce), nl,
+    
+findall(G, (selected_side(G), sides(ListG), member(G, ListG)), Order_side),
+write('Side: '), write_list(Order_side), nl.
+\end{lstlisting}
+	\caption{Displaying the order summary} 
+	\label{fig:display-ex}
+\end{figure}
+
+\section{Conclusion}
+\label{sec:conc}
+
+
+\subsection{Dealt Problems}
+As we construct the agent, there are couple of questions/obstacles to make it more interactable and realistic.
+
+The following questions are the dealt obstacles as we build the agent:
+\begin{itemize}
+    \item How to deal with multiple input?
+    
+    \item For the multiple-choice, how to show option list without the ones which already chosen?
+    
+    \item How to deal with customer's "false" input which is not in the list?
+    
+    \item How about getting customer's multiple input all at once? (Figure \ref{fig:list-input})
+\end{itemize}
+
+For the last one, we attempted to get multiple input of \textbf{veggie} order from customer all at once, and here's the predicate that we no longer use. The reason we decide not to use it is because it requires customers to input correctly. Since we don't use this predicate, customer's work of inputting gets relatively easier, but on the other hand, as its trade-off, the agent will show the list again and again until all the customer's inputs are done. It looks less realistic and a lot of work for the agent.
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}[style=Prolog-pygsty]
+/* List input ver.*/
+veggie_option_list_input([]).
+veggie_option_list_input([Input_Head|Input_Tail]) :- 
+    veggies(List), nth1(Input_Head, List, Elem),
+    assertz(selected_veggies(Elem)),
+    veggie_option_list_input(Input_Tail).
+\end{lstlisting}
+	\caption{The declaration of the predicate \predname{write\_list}} 
+	\label{fig:list-input}
+\end{figure}
+
+
+\subsection{Defects}
+
+As we discussed, one of this agent's defect is that it can only process one order at a time.
+In addition, as we dealt with all the problems listed above, we found the other defect that is, with this agent, customers cannot quit ordering in the middle of the interaction. In case of further extension, we can improve this point to make it more realistic and accessible. 
+
+
+\end{document}
