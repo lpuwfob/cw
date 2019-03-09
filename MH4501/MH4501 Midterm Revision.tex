@@ -1,4 +1,7 @@
 \documentclass[12pt]{extarticle}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins} %preamble
+\usepackage{tabularx}
 %Some packages I commonly use.
 \usepackage[english]{babel}
 \usepackage{graphicx}
@@ -58,8 +61,9 @@
 
 \maketitle
 
+
 \section{Multivariate Population and Sample Statistics}
-\subsection{Population Covariance Matrix}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Population Covariance Matrix]
 \begin{eqnarray*}
 {\bf \Sigma} = Cov(X) &=& {\bf E}[(X-\mu)(X-\mu)^T]\\
 &=& \left(
@@ -70,8 +74,9 @@
       \sigma_{p1} & \sigma_{p2} & \ldots & \sigma_{pp}
     \end{array} \right)
 \end{eqnarray*} 
+\end{tcolorbox}
 
-\subsection{Population Correlation Matrix}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Population Correlation Matrix]
 \begin{eqnarray*}
 \rho_{jk} = cor(X_j, X_k) = \frac{\sigma_{jk}}{\sqrt{\sigma_{jj}}\sqrt{\sigma_{kk}}}
 \end{eqnarray*}
@@ -84,6 +89,7 @@
       \rho_{p1} & \rho_{p2} & \ldots & 1
     \end{array} \right)
 \end{eqnarray*}
+\end{tcolorbox}
 
 \newpage
 \subsection{Population Covariance Matrix and Correlation Matrix}
@@ -99,30 +105,34 @@ V = diag(\sigma_{11}, \sigma_{22}, ... , \sigma_{pp}) = \left(
 \end{eqnarray*}
 
 \begin{eqnarray*}
-V^{1/2} = diag(\sqrt{\sigma_{11}}, \sqrt{\sigma_{22}}, ..., \sqrt{\sigma_{pp}})\\
+V^{1/2} = diag(\sqrt{\sigma_{11}}, \sqrt{\sigma_{22}}, ..., \sqrt{\sigma_{pp}})
 \end{eqnarray*}
-
 \begin{eqnarray*}
 V^{-1/2} = (V^{1/2})^{-1}
 \end{eqnarray*}
 
 We have: 
+\begin{tcolorbox}[enhanced, drop fuzzy shadow]
 \begin{eqnarray*}
 {\bf \Sigma} &=& V^{1/2}\rho V^{1/2}\\
 \rho &=& V^{-1/2} {\bf \Sigma} \  V^{-1/2}
 \end{eqnarray*}
+\end{tcolorbox}
 
 \subsection{Linear Transformation}
 \flushleft{
 When another r.v. $Y$ is defined as $Y_{q \times 1} := AX + b$, \\
 we have:
 }
-\begin{eqnarray*}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Linear Transformation]
+\begin{align*}
 \mu_Y = A\mu_X + b \\
 {\bf \Sigma}_Y = A {\bf \Sigma}_X A^T
-\end{eqnarray*}
+\end{align*}
+\end{tcolorbox}
 
 \subsection{Sample Mean Vector}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Sample Mean Vector]
 \begin{eqnarray*}
 \Bar{x} = \frac{1}{n}
     \left(\begin{array}{cccc}
@@ -136,10 +146,13 @@ we have:
     \end{array} \right)
 =\frac{1}{n} X^T {\bf 1}_{n \times 1}
 \end{eqnarray*}
+\end{tcolorbox}
+
 
 \subsection{Sample Covariance Matrix}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Sample Covariance Matrix]
 \begin{eqnarray*}
-SSCP = (n-1)S &=& \frac{1}{n}
+SSCP = (n-1)S &=&
     \left(\begin{array}{ccc}
       \sum^n_{i=1}(x_{i1}-\Bar{x}_1)^2 & \ldots & \sum^n_{i=1}(x_{i1}-\Bar{x}_1)(x_{ip}-\Bar{x}_p) \\
       \vdots & \ddots & \vdots \\
@@ -148,22 +161,25 @@ SSCP = (n-1)S &=& \frac{1}{n}
 &=& X^T (I_n - \frac{1}{n} {\bf 11}^T) X \\
 &=& X^T X -n \Bar{x} \Bar{x}^T
 \end{eqnarray*}
+\end{tcolorbox}
 
-\newpage
 \section{Multivariate Normal Distribution: MVN}
-\subsection{PDF of MVN $N_p(\mu, \Sigma)$}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Probability Density Function of Multivariate Normal Distribution]
 \begin{eqnarray*}
 f(x) = \frac{1}{(2\pi)^{p/2} det(\Sigma)^{1/2}} \exp\left(-\frac{1}{2} (x-\mu)^T \Sigma^{-1} (x-\mu)\right)
 \end{eqnarray*}
+\end{tcolorbox}
+
 
 \subsection{Properties of MVN}
-\subsubsection{Linear Transformation} 
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Linear Transformation]
 Linear transformation gives a new MVN
 \begin{eqnarray*}
 AX+b \sim N_q(A\mu + b, A\Sigma A^T)
 \end{eqnarray*}
+\end{tcolorbox}
 
-\subsubsection{Partition and independence}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Partition and independence]
 In the situation where
 \begin{eqnarray*}
 X=
@@ -186,22 +202,27 @@ We have: \\
 \begin{eqnarray*}
 \text{$X^{(1)}$ and $X^{(2)}$ are independent} \Leftrightarrow cov(X^{(1)},X^{(2)}) = \Sigma^{(12)} = {\bf 0}_{p \times q}
 \end{eqnarray*}
+\end{tcolorbox}
 
 \subsection{MVN Sampling Distribution}
-\subsubsection{Distribution of Mean Vector}
-$\Bar{x} \sim N_p\left(\mu, \frac{1}{n}\Sigma \right)$. Or equivalently, $\sqrt{n}(\Bar{x}-\mu) \sim N_p \left(0_p, \Sigma \right)$
-
-\subsubsection{Whishart Distribution}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Distribution of Mean Vector]
+\begin{align*}
+    \Bar{x} \sim N_p\left(\mu, \frac{1}{n}\Sigma \right) && \text{or equivalently, } && \sqrt{n}(\Bar{x}-\mu) \sim N_p \left(0_p, \Sigma \right)
+\end{align*}
+\end{tcolorbox}
+\ \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Whishart Distribution]
 $SSCP = (n-1)S \sim W_p(n-1, \Sigma)$, the \underline{Wishart distribution}.
 \begin{itemize}
-    \item When $p=1$ and $\Sigma_{1 \times 1}=1$, $W_1(n,1)$ reduces to the $\chi^2 (n)$ \\ \ \\
+    \item When $p=1$ and $\Sigma_{1 \times 1}=1$, $W_1(n,1)$ reduces to the $\chi^2 (n)$ \\
     \item If $W_1 \sim W_p(n_1, \Sigma)$, $W_2 \sim W_p(n_2, \Sigma)$, and $W_1$ and $W_2$ are independent, \\
-    then $W_1 + W_2 \sim W_p(n_1 + n_2, \Sigma)$ \\ \ \\
-        \item If $W \sim W_p(n,\Sigma)$, and $B_{q \times p}$ is a given matrix, \\
-    then $BWB^T \sim W_p (n, B\Sigma B^T)$
+    then $W_1 + W_2 \sim W_p(n_1 + n_2, \Sigma)$ \\
+    \item If $W \sim W_p(n,\Sigma)$, and $B_{q \times p}$ is a given matrix, \\
+    then $BWB^T \sim W_q (n, B\Sigma B^T)$
 \end{itemize}
-
-\subsubsection{Hotelling's $T^2$}
+\end{tcolorbox}
+\ \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Hotelling's $T^2$]
 Let $x_1, x_2, ..., x_n$ be $n$ independent realizations from $N_p(\mu, \Sigma)$, then
 \begin{itemize}
     \item $n(\Bar{x}-\mu)^T \Sigma^{-1} (\Bar{x}-\mu) \sim \chi^2 (p)$ \\
@@ -213,6 +234,7 @@ Let $x_1, x_2, ..., x_n$ be $n$ independent realizations from $N_p(\mu, \Sigma)$
         \item $d_i^2 = (x_i - \Bar{x})^T S^{-1} (x_i - \Bar{x}) \sim \chi^2 (p)$
     \end{itemize}
 \end{itemize}
+\end{tcolorbox}
 
 \newpage
 \section{Multivariate Statistical Inference}
@@ -220,38 +242,55 @@ Let $x_1, x_2, ..., x_n$ be $n$ independent realizations from $N_p(\mu, \Sigma)$
 A region $\mathcal{R} \subset \mathbb{R}^p$ is said to be a confidence region of $\mu_{p \times 1}$ \\
 at confidence level $1-\alpha$, if $Pr[\mathcal{R} \owns \mu] = 1-\alpha$ \\
 \ \\ 
-Since $T^2 = n(\Bar{x}-\mu)^T S^{-1} (\Bar{x}-\mu)$ and $\frac{n-p}{p(n-1)}T^2 \sim F(p, n-p)$, we have
+Since $T^2 = n(\Bar{x}-\mu)^T S^{-1} (\Bar{x}-\mu)$ and $\frac{n-p}{p(n-1)}T^2 \sim F(p, n-p)$, we have\\
+\ \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Confidence Region]
 \begin{eqnarray*}
 \mathcal{R} = \left\{ \mu : (\Bar{x}-\mu)^T S^{-1} (\Bar{x}-\mu) < \frac{p(n-1)}{n(n-p)}F_{\alpha}[p, n-p] \right\}
 \end{eqnarray*}
+\end{tcolorbox}
 
 \subsection{Simultaneous Confidence Interval: Bonferroni method}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Bonferroni's SCI]
 \begin{eqnarray*}
 \mathcal{R}_j = \left( \Bar{x}_j - t_{\alpha^*/2}[n-1] \sqrt{\frac{s_{jj}}{n}}, \Bar{x}_j + t_{\alpha^*/2}[n-1] \sqrt{\frac{s_{jj}}{n}} \right)
 \end{eqnarray*}
-where $\alpha^* = \alpha/p$. \\
+where $\alpha^* = \alpha/p$.
+\end{tcolorbox}
+
 
 \subsection{Situation when $n$ is large}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=CR and SCI; when $n$ is large]
 \begin{itemize}
     \item \underline{CR}:
-    $\mathcal{R} = \left\{ \mu : (\Bar{x}-\mu)^T S^{-1} (\Bar{x}-\mu) < \frac{1}{n}\chi^2_{\alpha}[p] \right\}$
+    \begin{align*}
+        \mathcal{R} = \left\{ \mu : (\Bar{x}-\mu)^T S^{-1} (\Bar{x}-\mu) < \frac{1}{n}\chi^2_{\alpha}[p] \right\}
+    \end{align*}
     \item \underline{SCI}:
-    $\mathcal{R}_j = \left( \Bar{x}_j - z_{\alpha^*/2} \sqrt{\frac{s_{jj}}{n}}, \Bar{x}_j + z_{\alpha^*/2} \sqrt{\frac{s_{jj}}{n}} \right)$
+    \begin{align*}
+        \mathcal{R}_j = \left( \Bar{x}_j - z_{\alpha^*/2} \sqrt{\frac{s_{jj}}{n}}, \Bar{x}_j + z_{\alpha^*/2} \sqrt{\frac{s_{jj}}{n}} \right)
+    \end{align*}
 \end{itemize}
+\end{tcolorbox}
 
+\newpage
 \subsection{Two-Sample Comparison: \underline{Paired} Observations}
 Consider 
 \begin{eqnarray*}
-d_1 = x_{11}-x{21}, d_2 = x_{12}-x{22}, ..., d_n = x_{1n}-x{2n} 
+d_1 = x_{11}-x_{21}, d_2 = x_{12}-x_{22}, ..., d_n = x_{1n}-x_{2n} 
 \end{eqnarray*}
 And test $H_0: \mu_d = {\bf 0}_{p \times 1}$ \\
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Statistics for paired observations]
 If we assume $d_i$ are from MVN, same as one-sample, we have
 \begin{eqnarray*}
 T^2 = n\Bar{d}^T S_d^{-1} \Bar{d} \end{eqnarray*}
 \begin{eqnarray*}
 \frac{n-p}{p(n-1)}T^2 \sim F(p, n-p)
 \end{eqnarray*}
-The arguments for CR and SCI are also same as one for the one-sample, changing $\Bar{x} \rightarrow \Bar{d}$ 
+\end{tcolorbox}
+
+The arguments for CR and SCI are also same as one for the one-sample, changing $\Bar{x} \rightarrow \Bar{d}$ \\
 
 \newpage
 \subsection{Two-Sample Comparison: \underline{Unpaired} Observations}
@@ -262,63 +301,102 @@ The arguments for CR and SCI are also same as one for the one-sample, changing $
     \item Two populations have the same population covariance matrix: $\Sigma_1 = \Sigma_2 = \Sigma$
 \end{itemize}
 
-We use \textbf{Pooled Sample Covariance Matrix}:
+We use \textbf{Pooled Sample Covariance Matrix}:\\
+\ \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Pooled Sample Covariance Matrix]
 \begin{eqnarray*}
 S_{pool} = \frac{(n_1 -1)S_1 + (n_2 -1)S_2}{n_1 + n_2 -2} = \frac{SSCP_1 + SSCP_2}{n_1 + n_2 -2}
 \end{eqnarray*}
-to estimate the unknown $\Sigma$\\
+\end{tcolorbox}
 
-\subsubsection{Hotteling's $T^2$ statistic}
+to estimate the unknown $\Sigma$\\
+\ \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Hoteling's $T^2$ statistic]
 \begin{eqnarray*}
 \Bar{x}_1 - \Bar{x}_2 \sim N_p \left( \mu_1 - \mu_2, \left( \frac{1}{n_1} + \frac{1}{n_2} \right) \Sigma \right)
 \end{eqnarray*}
 Thus
 \begin{eqnarray*}
-[(\Bar{x}_1 - \Bar{x}_2) - \mu_1 - \mu_2]^T \left( \frac{1}{n_1} + \frac{1}{n_2} \right)^{-1} \Sigma^{-1} [(\Bar{x}_1 - \Bar{x}_2) - \mu_1 - \mu_2] \sim \chi^2(p)
+[(\Bar{x}_1 - \Bar{x}_2) - (\mu_1 - \mu_2)]^T \left( \frac{1}{n_1} + \frac{1}{n_2} \right)^{-1} \Sigma^{-1} [(\Bar{x}_1 - \Bar{x}_2) - (\mu_1 - \mu_2)] \sim \chi^2(p)
 \end{eqnarray*}
 and
 \begin{eqnarray*}
-T^2 = [(\Bar{x}_1 - \Bar{x}_2) - \mu_1 - \mu_2]^T \left( \frac{1}{n_1} + \frac{1}{n_2} \right)^{-1} S_{pool}^{-1} [(\Bar{x}_1 - \Bar{x}_2) - \mu_1 - \mu_2]
+T^2 = [(\Bar{x}_1 - \Bar{x}_2) - (\mu_1 - \mu_2)]^T \left( \frac{1}{n_1} + \frac{1}{n_2} \right)^{-1} S_{pool}^{-1} [(\Bar{x}_1 - \Bar{x}_2) - (\mu_1 - \mu_2)]
 \end{eqnarray*}
 with
 \begin{eqnarray*}
 \frac{n_1 + n_2 - 1 - p}{p(n_1 + n_2 -2)}
 T^2 \sim F(p, n_1 + n_2 -1-p)
 \end{eqnarray*}
+\end{tcolorbox}
 
 \newpage
 \subsubsection{Hypothesis Testing under $H_0: \mu_1 = \mu_2$}
-We reject $H_0$ if the observed value of $\frac{n_1 + n_2 -1-p}{p(n_1 + n_2 -2)}T^2$ is greater than critical value $F_{\alpha} [p, n_1 + n_2 -1-p]$, where $\alpha$ is the desired significant level.\\
+We reject $H_0$ if
+\begin{align*}
+    \frac{n_1 + n_2 -1-p}{p(n_1 + n_2 -2)}T^2 > F_{\alpha} [p, n_1 + n_2 -1-p]
+\end{align*}
+where $\alpha$ is the desired significant level.\\
 
 \subsubsection{CR of $\delta = \mu_1 - \mu_2$ at confidence level $1-\alpha$}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=CR for unpaied two-sample]
 \begin{eqnarray*}
-\mathcal{R} = \left\{ \delta : (\Bar{x}_1 - \Bar{x}_2 -\delta)^T \left( \frac{1}{n_1}+\frac{1}{n_2} \right)^{-1} S^{-1}_{pool} (\Bar{x}_1 - \Bar{x}_2 -\delta) < \frac{p(n_1 + n_2 -2)}{n_1 + n_2 -1-p} F_{\alpha}[p, n_1 + n_2 -1-p] \right\}
+\mathcal{R} = \left\{ \delta : (\Bar{x}_1 - \Bar{x}_2 -\delta)^T \left( \frac{1}{n_1}+\frac{1}{n_2} \right)^{-1} S^{-1}_{pool} (\Bar{x}_1 - \Bar{x}_2 -\delta)\right. \\
+\left. < \frac{p(n_1 + n_2 -2)}{n_1 + n_2 -1-p} F_{\alpha}[p, n_1 + n_2 -1-p] \right\}
 \end{eqnarray*}
+\end{tcolorbox}
 
 \subsubsection{Bonferroni SCIs of $\mu_d$ at confidence level $1-\alpha$}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Bonferroni's SCI]
 \begin{eqnarray*}
 \mathcal{R}_j = \Bigg( (\Bar{x}_1 - \Bar{x}_2)_j - t_{\alpha^*/2}[n_1 + n_2 -2] \sqrt{\left( \frac{1}{n_1}+\frac{1}{n_2} \right)^{-1} s_{pool,jj}}, \\
 (\Bar{x}_1 - \Bar{x}_2)_j + t_{\alpha^*/2}[n_1 + n_2 -2] \sqrt{\left( \frac{1}{n_1}+\frac{1}{n_2} \right)^{-1} s_{pool,jj}} \Bigg)
 \end{eqnarray*}
 where $\alpha^* = \alpha/p$
+\end{tcolorbox}
 
+\newpage
+\subsubsection{When $n$ is large}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Hotelling's $T^2$; when $n$ is large]
+\begin{eqnarray*}
+T^2 = (\Bar{x}_1 -\Bar{x}_2)^T \left( \frac{S_1}{n_1}+\frac{S_2}{n_2}\right)^{-1}(\Bar{x}_1 -\Bar{x}_2) \sim \chi^2 (p), &\text{under } H_0:\mu_1=\mu_2 
+\end{eqnarray*}
+\end{tcolorbox}
+\ \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=CR for unpaied two-sample; when $n$ is large]
+\begin{eqnarray*}
+\mathcal{R} = \left\{ \delta : (\Bar{x}_1 - \Bar{x}_2 -\delta)^T \left( \frac{S_1}{n_1}+\frac{S_2}{n_2} \right)^{-1} (\Bar{x}_1 - \Bar{x}_2 -\delta) < \chi^2_\alpha [p] \right\}
+\end{eqnarray*}
+\end{tcolorbox}
+\ \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Bonferroni's SCI; when $n$ is large]
+\begin{eqnarray*}
+\mathcal{R}_j = \left( (\Bar{x}_1 - \Bar{x}_2)_j -z_{\alpha^*/2} \sqrt{ \frac{s_{1,jj}}{n_1}+\frac{s_{2,jj}}{n_2}}, (\Bar{x}_1 - \Bar{x}_2)_j +z_{\alpha^*/2} \sqrt{ \frac{s_{1,jj}}{n_1}+\frac{s_{2,jj}}{n_2}} \right)
+\end{eqnarray*}
+where $\alpha^* = \alpha/p$
+\end{tcolorbox}
 
+\newpage
 \section{MANOVA: Multivariate Analysis of Variance}
 \subsection{Step 1}
-We want to test the null hypothesis $H_0: \mu_1 = \mu_2 = ...  = \mu_G$ \\
-Decompose population mean vector of each population as \\
+We want to test the null hypothesis \underline{$H_0: \mu_1 = \mu_2 = ...  = \mu_G$} \\
+Decompose population mean vector of each population as\\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Treatment Effect]
 \begin{eqnarray*}
 \mu_g = \mu + (\mu_g -\mu) = \mu + \tau_g
 \end{eqnarray*}
+\end{tcolorbox}
 where $\tau_g = \mu_g - \mu$ is the treatment effect of Population $g$. \\
-Therefore, it is equivalent to test $H_0: \tau_1 = \tau_2 =...= \tau_g = {\bf 0}_{p \times 1}$ \\
+Therefore, it is equivalent to test \underline{$H_0: \tau_1 = \tau_2 =...= \tau_g = {\bf 0}_{p \times 1}$} \\
 
 
 \subsection{Step 2}
 Furthermore, let $X_g$ be any realization/observation of Population $g$, then we can decompose $X_g$ as \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Residual]
 \begin{eqnarray*}
 X_g = \mu + \tau_g + (X_g - \mu_g) = \mu + \tau_g + e_g
 \end{eqnarray*}
+\end{tcolorbox}
 where $e_g = X_g - \mu_g \sim N_p({\bf 0}_{p \times 1}, \Sigma)$ is the term of random error.
 
 
@@ -327,13 +405,15 @@ Now assume we have a sample from each of the populations: \\
 \underline{\bf For Sample $g$, we have $n_g$ realizations from Population g: $N_p (\mu_g, \Sigma)$} \\
 \ \\ 
 Following the discussion on the precious page, we decompose every $x_{gi}$ as \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Realization Decomposition]
 \begin{eqnarray*}
 x_{gi} = \underbrace{\Bar{x}}_\text{overall sample mean vector} + \underbrace{(\Bar{x}_g - \Bar{x})}_\text{estimated treatment effect} + \underbrace{(x_{gi} - \Bar{x}_g)}_\text{residual}
 \end{eqnarray*}
+\end{tcolorbox}
 
-
+\newpage
 \subsection{Step 4}
-Following the decomposition of $x_gi$, we have $x_{gi} - \Bar{x} = (\Bar{x}_g -\Bar{x}) + (x_{gi} -\Bar{x}_g)$.\\
+Following the decomposition of $x_{gi}$, we have $x_{gi} - \Bar{x} = (\Bar{x}_g -\Bar{x}) + (x_{gi} -\Bar{x}_g)$.\\
 Therefore \footnote{Noticing that $\sum_{i=1}^{n_g} (\Bar{x}_g -\Bar{x})(x_{gi} -\Bar{x}_g)^T = {\bf 0}_{p \times p}$ and $\sum_{i=1}^{n_g} (x_{gi} -\Bar{x}_g)(\Bar{x}_g -\Bar{x})^T = {\bf 0}_{p \times p}$.\\  (The sums of crossing terms are zero matrix.)},
 \begin{eqnarray*}
 \sum_{i=1}^{n_g}(x_{gi} - \Bar{x})(x_{gi} - \Bar{x})^T = n_g (\Bar{x}_g -\Bar{x})(\Bar{x}_g -\Bar{x})^T + \sum_{i=1}^{n_g}(x_{gi} -\Bar{x}_g)(x_{gi} -\Bar{x}_g)^T
@@ -341,9 +421,13 @@ Therefore \footnote{Noticing that $\sum_{i=1}^{n_g} (\Bar{x}_g -\Bar{x})(x_{gi} 
 
 \subsection{Step 5}
 If we further sum over $g=1,2,...,G$, we have\\
+\ \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=SSCP Decomposition]
 \begin{eqnarray*}
 \underbrace{\sum_{g=1}^G\sum_{i=1}^{n_g}(x_{gi} - \Bar{x})(x_{gi} - \Bar{x})^T}_\text{$SSCP_{tot}$: total SSCP} = \underbrace{\sum_{g=1}^G n_g (\Bar{x}_g -\Bar{x})(\Bar{x}_g -\Bar{x})^T}_\text{$SSCP_{tr}$: treatment SSCP} + \underbrace{\sum_{g=1}^G \sum_{i=1}^{n_g}(x_{gi} -\Bar{x}_g)(x_{gi} -\Bar{x}_g)^T}_\text{$SSCP_{res}$: residual SSCP}
 \end{eqnarray*}
+\end{tcolorbox}
+
 where "SSCP" is short for "sum of squares and cross products". Now we can eventually construct the MANOVA table: \\
 \ \\ 
 \begin{center}
@@ -365,7 +449,7 @@ where "SSCP" is short for "sum of squares and cross products". Now we can eventu
     W = \sum_{g=1}^G SSCP_g = \sum_{g=1}^G (n_g -1)S_g
     \end{eqnarray*} \\
     
-    \item "B" is short for "between". $B=\sum_{g=1}^G n_g (\Bar{x}_g -\Bar{x})(\Bar{x}_g -\Bar{x})^T$ is the treatment SSCP, it equals the total SSCP of an imaginary sample with size $n=\sum_{g=1}^G$:\\
+    \item "B" is short for "between". $B=\sum_{g=1}^G n_g (\Bar{x}_g -\Bar{x})(\Bar{x}_g -\Bar{x})^T$ is the treatment SSCP, it equals the total SSCP of an imaginary sample with size $n=\sum_{g=1}^G n_g$:\\
     \begin{eqnarray*}
     \underbrace{\Bar{x}_1,\Bar{x}_1,...,\Bar{x}_1}_{n_1},\underbrace{\Bar{x}_2,\Bar{x}_2,...,\Bar{x}_2}_{n_2},...,\underbrace{\Bar{x}_G,\Bar{x}_G,...,\Bar{x}_G}_{n_G},
     \end{eqnarray*}
@@ -373,15 +457,21 @@ where "SSCP" is short for "sum of squares and cross products". Now we can eventu
 
 \subsection{Wilk's Lambda Statistic}
 The test statistic in MANOVA is the Wilk's lambda statistic: \\
+\ \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Wilk's Lambda Statistics]
 \begin{eqnarray*}
 \Lambda^* = \frac{det(W)}{det(W+B)}
 \end{eqnarray*}
+\end{tcolorbox}
 
 \subsection{Bartlett's Approximation}
 If $n=\sum_{g=1}^G n_g$ is large, we have the Bartlett's approximation: \\
+\ \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Bartlett's Approximation]
 \begin{eqnarray*}
 -\left( n-1-\frac{p+G}{2} \right)ln \Lambda^* \sim \chi^2 (p(G-1))
 \end{eqnarray*}
 under $H_0: \mu_1 = \mu_2 = ... = \mu_G$.
+\end{tcolorbox}
 
 \end{document}
