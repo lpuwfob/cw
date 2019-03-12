@@ -1,0 +1,465 @@
+\documentclass[12pt]{extarticle}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins} %preamble
+\usepackage{tabularx}
+%Some packages I commonly use.
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{enumerate}
+\usepackage[utf8]{inputenc}
+\usepackage[top=1 in,bottom=1in, left=1 in, right=1 in]{geometry}
+
+%A bunch of definitions that make my life easier
+\newcommand{\matlab}{{\sc Matlab} }
+\newcommand{\cvec}[1]{{\mathbf #1}}
+\newcommand{\rvec}[1]{\vec{\mathbf #1}}
+\newcommand{\ihat}{\hat{\textbf{\i}}}
+\newcommand{\jhat}{\hat{\textbf{\j}}}
+\newcommand{\khat}{\hat{\textbf{k}}}
+\newcommand{\minor}{{\rm minor}}
+\newcommand{\trace}{{\rm trace}}
+\newcommand{\spn}{{\rm Span}}
+\newcommand{\rem}{{\rm rem}}
+\newcommand{\ran}{{\rm range}}
+\newcommand{\range}{{\rm range}}
+\newcommand{\mdiv}{{\rm div}}
+\newcommand{\proj}{{\rm proj}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\<}{\langle}
+\renewcommand{\>}{\rangle}
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\attn}[1]{\textbf{#1}}
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem*{definition}{Definition}
+\newtheorem*{example}{Example}
+\newtheorem*{note}{Note}
+\newtheorem{exercise}{Exercise}
+\newcommand{\bproof}{\bigskip {\bf Proof. }}
+\newcommand{\eproof}{\hfill\qedsymbol}
+\newcommand{\Disp}{\displaystyle}
+\newcommand{\qe}{\hfill\(\bigtriangledown\)}
+\setlength{\columnseprule}{1 pt}
+
+
+\title{\textbf{MH4514 Financial Mathematics}\\
+\Large - Midterm Revision -}
+\author{Naoki Honda}
+\date{March 2019}
+
+\begin{document}
+
+\maketitle
+
+
+\section{(10.6) Properties of the Conditional Expectation}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Properties of CE]
+\begin{itemize}
+    \item   If $G$ depends only on the information contained in $\mathcal{G}$,
+            \begin{align*}
+            \mathbb{E}[FG|\mathcal{G}]=G\mathbb{E}[F|\mathcal{G}]
+            \end{align*}
+    \item   If $G$ depends only on the information contained in $\mathcal{G}$,
+            \begin{align*}
+            \mathbb{E}[G|\mathcal{G}]=G
+            \end{align*}
+    \item   \textbf{Tower Property}
+            \begin{align*}
+                \mathbb{E}[\mathbb{E}[F|\mathcal{G}]|\mathcal{H}] = \mathbb{E}[F|\mathcal{H}] & \text{\ \ \ \ (if\ } \mathcal{H} \subset \mathcal{G})
+            \end{align*}
+    \item   When $F$ "\underline{does not depend}" on the information
+            contained in $\mathcal{G}$ (more stated, when the random variable $F$ is \textit{independent} of the $\sigma$-algebra $\mathcal{G}$),
+            \begin{align*}
+             \mathbb{E}[F|\mathcal{G}]=\mathbb{E}[F]
+            \end{align*}
+    \item   If $G$ depends only on $\mathcal{G}$ 
+            and $F$ is independent of $\mathcal{G}$, then
+            \begin{align*}
+            \mathbb{E}[h(F,G)|\mathcal{G}]=\mathbb{E}[h(F,x)]_{x=G}
+            \end{align*}
+\end{itemize}
+\end{tcolorbox}
+
+\newpage
+\section{(1) Discrete-Time Martingales}
+\subsection{Definition}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Definition 1.1]
+An integrable\footnote{Integrable means $\mathbb{E}[|Z_n|] < \infty$ for all $n \in \mathbb{N}$}, discrete-time process $(Z_n)_{n \in \mathbb{N}}$ is a \underline{martingale} with respect to $(\mathcal{F}_n)_{n \in \mathbb{N}}$ if $(Z_n)_{n \in \mathbb{N}}$ is $\mathcal{F}_n$-adapted and satisfies the property
+\begin{align*}
+    && \mathbb{E}[Z_{n+1} | \mathcal{F}_n] = Z_n, && n \in \mathbb{N}
+\end{align*}
+\end{tcolorbox}
+
+\subsection{Properties}
+A particular property of martingales is that their expectation is constant over time.
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Proposition 1.2]
+Let $(Z_n)_{n \in \mathbb{N}}$ be martingale, we have
+\begin{align*}
+    && \mathbb{E}[Z_{n}] = \mathbb{E}[Z_{0}], && n \in \mathbb{N}
+\end{align*}
+\end{tcolorbox}
+\ \\ 
+The following Theorem 1.6 is called the \underline{Doob's stopping time theorem}.
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Theorem 1.6]
+Assume that $(M_n)_{n \in \mathbb{N}}$ is a martingale with respect to $(\mathcal{F}_n)_{n \in \mathbb{N}}$. Then the \textit{stopped process} $(M_{\tau \wedge n})_{n \in \mathbb{N}}$ is also a martingale with respect to $(\mathcal{F}_n)_{n \in \mathbb{N}}$.
+\end{tcolorbox}
+
+
+
+\subsection{Applications: Ruin Probability}
+Consider the standard random walk (or gambling process) $(S_n)_{n \in \mathbb{N}}$ on $\{0,1,...,B\}$ with independent $\{-1,1\}$-valued increments, and
+\begin{align*}
+    \mathbb{P}(S_{n+1}-S_n = +1)=p && \text{and} && \mathbb{P}(S_{n+1}-S_n = -1)=q, && n \in \mathbb{N}
+\end{align*}
+Let
+\begin{align*}
+    T_{0,B}:\Omega \longrightarrow \mathbb{N}
+\end{align*}
+be the first hitting time of the boundary $\{0,B\}$, define stopping time $\tau$ by
+\begin{align*}
+    \tau := T_{0,B} := \text{inf}\{n \geq 0: S_n = B \text{\ or\ } S_n = 0\}
+\end{align*}
+
+\newpage
+We will recover the ruin probabilities
+\begin{align*}
+    \mathbb{P}(s_\tau =0 | S_0 = k), && k=0,1,...,B
+\end{align*}
+First in the unbiased case $p=q=1/2$
+
+\subsubsection{Unbiased Ruin Probability with Martingale}
+\underline{Step 1}. The process $(S_n)_{n \in \mathbb{N}}$ is a martingale. \\ \\
+We note that the process $(S_n)_{n \in \mathbb{N}}$ has independent increments, and in the unbiased case $p=q=1/2$ those increments are centered:
+\begin{align*}
+    \mathbb{E}[S_{n+1} - S_n]=1 \times p + (-1) \times q = 1 \times \frac{1}{2} + (-1) \times \frac{1}{2} =0,
+\end{align*}
+hence $(S_n)_{n \in \mathbb{N}}$ is a \textit{martingale}.\\ \\
+\underline{Step 2}. The stopped process $(S_{\tau \wedge n})_{n \in \mathbb{N}}$ is also a martingale, as a consequence of Theorem 1.6 (Doob's stopping time theorem)\\ \\
+\underline{Step 3}. Since the stopped process $(S_{\tau \wedge n})_{n \in \mathbb{N}}$ is a martingale, we find that its expectation $\mathbb{E}[S_{\tau \wedge n}|S_0 = k]$ is constant in $n \in \mathbb{N}$ by proposition 1.2, which gives
+\begin{align*}
+        k=\mathbb{E}[S_0 |S_0=k]=\mathbb{E}[S_{\tau \wedge n} |S_0=k], && k=0,1,...,B
+\end{align*}
+Letting $n$ go to infinity we get
+\begin{align*}
+    \mathbb{E}[S_\tau | S_0 =k] &= \mathbb{E}\left[\lim_{n \to \infty} S_{\tau \wedge n} | S_0 =k\right] \\
+    &= \lim_{n \to \infty} \mathbb{E}[S_{\tau \wedge n} | S_0 =k] =k
+\end{align*}
+where the exchange between limit and expectation is justified by the boundedness $|S_{\tau \wedge n}| \leq B$ \textit{a.s.}, $n \in \mathbb{N}$.\\
+Hence we have
+\begin{align*}
+    \begin{cases}
+        0 \times \mathbb{P}(S_\tau =0|S_0 =k) + B \times \mathbb{P}(S_\tau =B|S_0 =k) =\mathbb{E}[S_\tau | S_0 =k] =k \\
+        \mathbb{P}(S_\tau =0|S_0 =k) + \mathbb{P}(S_\tau =B|S_0 =k) = 1
+    \end{cases}
+\end{align*}
+which shows that
+\begin{align*}
+    \mathbb{P}(S_\tau =B|S_0 =k)=\frac{k}{B} && \text{and} && \mathbb{P}(S_\tau =0|S_0 =k)=1-\frac{k}{B}
+\end{align*}
+
+\newpage
+\subsubsection{Biased Ruin Probability with Martingale}
+Next, for the unbiased case where $p \neq q$.
+Here we note that the processs
+\begin{align*}
+    && M_n := \left( \frac{q}{p} \right)^{S_n}, && n \in \mathbb{N}
+\end{align*}
+is a martingale with respect to $(\mathcal{F}_n)_{n \in \mathbb{N}}$.\\
+\underline{Step 1}. The process $(M_n)_{n \in \mathbb{N}}$ is a martingale.
+\begin{align*}
+    \mathbb{E}[M_{n+1}|\mathcal{F}_n]&= \mathbb{E}\left[\left( \frac{q}{p} \right)^{S_{n+1}} \bigg| \mathcal{F}_n \right] = \mathbb{E}\left[\left( \frac{q}{p} \right)^{S_{n+1} -S_n} \left( \frac{q}{p} \right)^{S_n} \bigg| \mathcal{F}_n \right] \\
+    &= \left( \frac{q}{p} \right)^{S_n} \mathbb{E}\left[\left( \frac{q}{p} \right)^{S_{n+1} -S_n} \bigg| \mathcal{F}_n \right]\\
+    &= \left( \frac{q}{p} \right)^{S_n} \mathbb{E}\left[\left( \frac{q}{p} \right)^{S_{n+1} -S_n} \right]\\
+    &= \left( \frac{q}{p} \right)^{S_n} \left( \frac{q}{p} \mathbb{P}(S_{n+1} -S_{n} =1) + \left(\frac{q}{p}\right)^{-1} \mathbb{P}(S_{n+1} -S_{n} =-1) \right)\\
+    &= \left( \frac{q}{p} \right)^{S_n} \left( p\frac{q}{p}  + q\left(\frac{q}{p}\right)^{-1} \right)\\
+    &= \left( \frac{q}{p} \right)^{S_n} (q+p) = \left( \frac{q}{p} \right)^{S_n} = M_n
+\end{align*}
+$n \in \mathbb{N}$. In particular, the expectation of $(M_n)_{n \in \mathbb{N}}$ is constant over time by Proposition 1.2 since it is a martingale, \textit{i.e.} we have
+\begin{align*}
+    && \left( \frac{q}{p} \right)^k = \mathbb{E}[M_0 | S_0 =k] = \mathbb{E}[M_n | S_0 =k], && k=0,1,...,B, && n \in \mathbb{N}
+\end{align*}
+\underline{Step 2}. The stopped process $(M_{\tau \wedge n})_{n \in \mathbb{N}}$ is also a martingale, as a consequence of Theorem 1.6\\ \\
+\underline{Step 3}. Since the stopped process $(M_{\tau \wedge n})_{n \in \mathbb{N}}$ remains a martingale, its expected value $\mathbb{E}[M_{\tau \wedge n}|S_0 =k]$ is constant in $n \in \mathbb{N}$ by Proposition 1.2, this gives
+\begin{align*}
+    \left( \frac{q}{p} \right)^k = \mathbb{E}[M_0 | S_0 =k] = \mathbb{E}[M_{\tau \wedge n} | S_0 =k]
+\end{align*}
+Next, letting $n$ go to infinity we find
+\begin{align*}
+    \left( \frac{q}{p} \right)^k &= \mathbb{E}[M_0 | S_0 =k] = \lim_{n \to \infty}\mathbb{E}[M_{\tau \wedge n} | S_0 =k]\\
+    &= \mathbb{E}[\lim_{n \to \infty}M_{\tau \wedge n} | S_0 =k]\\
+    &= \mathbb{E}[M_\tau | S_0 =k]
+\end{align*}
+hence
+\begin{align*}
+    \left( \frac{q}{p} \right)^k &= \mathbb{E}[M_\tau | S_0 =k]\\
+    &= \left( \frac{q}{p} \right)^B \mathbb{P}\left(M_\tau = \left( \frac{q}{p} \right)^B \bigg| S_0 =k \right) + \left( \frac{q}{p} \right)^0 \mathbb{P}\left(M_\tau = \left( \frac{q}{p} \right)^0 \bigg| S_0 =k \right)\\
+    &= \left( \frac{q}{p} \right)^B \mathbb{P}\left(M_\tau = \left( \frac{q}{p} \right)^B \bigg| S_0 =k \right) + \mathbb{P}(M_\tau = 1 | S_0 =k )
+\end{align*}
+Solving the system of equations
+\begin{align*}
+    \begin{cases}
+    \left( \frac{q}{p} \right)^k = \left( \frac{q}{p} \right)^B \mathbb{P}\left(M_\tau = \left( \frac{q}{p} \right)^B \bigg| S_0 =k \right) + \mathbb{P}(M_\tau = 1 | S_0 =k )\\
+    \mathbb{P}\left(M_\tau = \left( \frac{q}{p} \right)^B \bigg| S_0 =k \right) + \mathbb{P}(M_\tau = 1 | S_0 =k ) =1
+    \end{cases}
+\end{align*}
+gives
+\begin{align*}
+    \mathbb{P}(S_\tau = B | S_0 =k ) &= \mathbb{P}\left(M_\tau = \left( \frac{q}{p} \right)^B \bigg| S_0 =k \right)\\
+    &= \frac{(q/p)^k -1}{(q/p)^B -1}
+\end{align*}
+and
+\begin{align*}
+    \mathbb{P}(S_\tau = 0 | S_0 =k ) &= \mathbb{P}(M_\tau = 1 | S_0 =k)\\
+    &= 1- \frac{(q/p)^k -1}{(q/p)^B -1}\\
+    &= \frac{(q/p)^B - (q/p)^k}{(q/p)^B -1}
+\end{align*}
+for $k=0,1,...,B$.
+
+\newpage
+\subsection{Applications: Mean Game Duration}
+In this section we show how we can recover the mean game duration $\mathbb{E}[\tau | S_0 =k]$.\\ \\
+\subsubsection{Unbiased Mean Game Duration with Martingale}
+In the case of a fair game $p=q=1/2$,\\
+\underline{Step 1}. The process $(S_n^2 -n)_{n \in \mathbb{N}}$ is a martingale. \\
+\begin{align*}
+    \mathbb{E}[S_{n+1}^2 -(n+1)|\mathcal{F}_n] &= \mathbb{E}[(S_n + S_{n+1} - S_n)^2 -(n+1)|\mathcal{F}_n]\\
+    &= \mathbb{E}[S_n^2 + (S_{n+1} - S_n)^2 +2S_n(S_{n+1} - S_n)-(n+1)|\mathcal{F}_n]\\
+    &= \mathbb{E}[S_n^2-n-1|\mathcal{F}_n] + \mathbb{E}[(S_{n+1} - S_n)^2|\mathcal{F}_n] +2\mathbb{E}[S_n(S_{n+1} - S_n)|\mathcal{F}_n]\\
+    &= S_n^2-n-1 +\mathbb{E}[(S_{n+1} - S_n)^2] +2S_n\mathbb{E}[S_{n+1} - S_n]\\
+    &= S_n^2-n-1 +\mathbb{E}[(S_{n+1} - S_n)^2]\\
+    &= S_n^2-n
+\end{align*}
+\underline{Step 2}. The stopped process $(S_{\tau \wedge n}^2 -\tau \wedge n)_{n \in \mathbb{N}}$ is also a martingale, as a consequence of Theorem 1.6\\ \\
+\underline{Step 3}. Since the stopped process $(S_{\tau \wedge n}^2 -\tau \wedge n)_{n \in \mathbb{N}}$ is also a martingale, its expectation $\mathbb{E}[S_{\tau \wedge n}^2 -\tau \wedge n | S_0 =k]$ is constant in $n \in \mathbb{N}$ by Proposition 1.2, hence we have
+\begin{align*}
+    k^2 = \mathbb{E}[S_0^2 -0 | S_0 =k] = \mathbb{E}[S_{\tau \wedge n}^2 -\tau \wedge n | S_0 =k]
+\end{align*}
+and after taking the limit as $n$ tends to infinity,
+\begin{align*}
+    k^2 &=\lim_{n \to \infty}\mathbb{E}[S_{\tau \wedge n}^2 -\tau \wedge n | S_0 =k]\\
+    &=\lim_{n \to \infty}\mathbb{E}[S_{\tau \wedge n}^2| S_0 =k] -\lim_{n \to \infty}\mathbb{E}[\tau \wedge n| S_0 =k]\\
+    &= \mathbb{E}\left[\lim_{n \to \infty}S_{\tau \wedge n}^2| S_0 =k\right] -\mathbb{E}\left[\lim_{n \to \infty} \tau \wedge n| S_0 =k\right]\\
+    &= \mathbb{E}\left[\lim_{n \to \infty}S_{\tau \wedge n}^2 - \lim_{n \to \infty} \tau \wedge n| S_0 =k\right]\\
+    &= \mathbb{E}[S_\tau^2 - \tau| S_0 =k]
+\end{align*}
+since $S_{\tau \wedge n}^2 \in [0, B^2]$ for all $n \in \mathbb{N}$ and $n \mapsto \tau \wedge n$ is nondecreasing, and this gives
+\begin{align*}
+    k^2 &= \mathbb{E}[S_\tau^2 - \tau| S_0 =k]\\
+    &= \mathbb{E}[S_\tau^2| S_0 =k] - \mathbb{E}[\tau| S_0 =k]\\
+    &= B^2 \mathbb{P}(S_\tau =B|S_0 = k) + 0^2 \mathbb{P}(S_\tau =0|S_0 = k) - \mathbb{E}[\tau| S_0 =k]
+\end{align*}
+\textit{i.e.}
+\begin{align*}
+    \mathbb{E}[\tau| S_0 =k] &= B^2(S_\tau =B|S_0 = k)-k^2\\
+    &= B^2 \frac{k}{B} -k^2\\
+    &= k(B-k), & k=0,1,...,B
+\end{align*}
+
+\newpage
+\subsubsection{Biased Mean Game Duration with Martingale}
+In the case of non-symmetric case where $p \neq q$\\
+\underline{Step 1}. The process $S_n -(p-q)n$ is a martingale. \\
+\begin{align*}
+    \mathbb{E}[S_n -S_{n-1} -(p-q)] = \mathbb{E}[S_n - S_{n-1}] -(p-q) =0
+\end{align*}
+\underline{Step 2}. The stopped process $(S_{\tau \wedge n} -(p-q)(\tau \wedge n))_{n \in \mathbb{N}}$ is also a martingale, as a consequence of Theorem 1.6\\ \\
+\underline{Step 3}. The expectation $\mathbb{E}[S_{\tau \wedge n} -(p-q)(\tau \wedge n) | S_0 =k]$ is constant in $n \in \mathbb{N}$\\ \\
+\underline{Step 4}. Since the stopped process $(S_{\tau \wedge n} -(p-q)(\tau \wedge n))_{n \in \mathbb{N}}$ is a martingale, we have
+\begin{align*}
+    k = \mathbb{E}[S_0 -0 | S_0 =k] = \mathbb{E}[S_{\tau \wedge n} -(p-q)(\tau \wedge n)| S_0 =k]
+\end{align*}
+and after taking the limit as $n$ tends to infinity,
+\begin{align*}
+    k &= \lim_{n \to \infty} \mathbb{E}[S_{\tau \wedge n} -(p-q)(\tau \wedge n)| S_0 =k]\\
+    &= \mathbb{E}[\lim_{n \to \infty}S_{\tau \wedge n} -(p-q)\lim_{n \to \infty}\tau \wedge n| S_0 =k]\\
+    &= \mathbb{E}[S_\tau -(p-q)\tau| S_0 =k]
+\end{align*}
+which gives
+\begin{align*}
+    k &= \mathbb{E}[S_\tau -(p-q)\tau| S_0 =k]\\
+    &= \mathbb{E}[S_\tau| S_0 =k]-(p-q)\mathbb{E}[\tau| S_0 =k]\\
+    &= B \times \mathbb{P}(S_\tau =B| S_0 =k) + 0\times \mathbb{P}(S_\tau =0| S_0 =k) - (p-q)\mathbb{E}[\tau| S_0 =k]
+\end{align*}
+\textit{i.e.}
+\begin{align*}
+    (p-q)\mathbb{E}[\tau| S_0 =k] &= B \times \mathbb{P}(S_\tau =B| S_0 =k)-k\\
+    &= B\frac{(q/p)^k-1}{(q/p)^B-1}-k,
+\end{align*}
+hence
+\begin{align*}
+    \mathbb{E}[\tau| S_0 =k]=\frac{1}{p-q}\left(B\frac{(q/p)^k-1}{(q/p)^B-1}-k \right)
+\end{align*}
+for $k=0,1,...,B$ \\
+
+\newpage
+\subsection{Applications: Summary}
+Here's the summarized table of the family of martingales.\\ 
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Table 1.1: List of martingales.]
+\begin{center}
+  \begin{tabularx}{6in}{| X | X | X |} \hline
+    \  & Unbiased & Biased \\ \hline
+    Ruin probability & $S_n$ & $\left(\frac{q}{p}\right)^{S_n}$ \\ \hline
+    Mean game duration & $S_n^2 -n$ & $S_n -n(p-q)$ \\ \hline
+  \end{tabularx}
+\end{center}
+\end{tcolorbox}
+\newpage
+
+\section{(2) Assets, Portfolios, and Arbitrage}
+\subsection{(0) Back to the Introduction}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Definition 0.1: Put option]
+A (European) \textit{put} option is a contract that gives its holder the right to \textit{sell} a quantity of assets at a predefined price $K$ called the strike price and at a predefined date $T$ called maturity
+\end{tcolorbox}
+In general, the payoff of a put option takes the form
+\begin{align*}
+    \phi(S_T)=(K-S_T)^+ :=
+    \begin{cases}
+    K-S_T  & S_T \leq K \\
+    0  & S_T \geq K
+    \end{cases}
+\end{align*}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Definition 0.2: Call option]
+A (European) \textit{call} option is a contract that gives its holder the right to \textit{buy} a quantity of assets at a predefined price $K$ called the strike price and at a predefined date $T$ called maturity
+\end{tcolorbox}
+In general, the payoff of a put option takes the form
+\begin{align*}
+    \phi(S_T)=(S_T-K)^+ :=
+    \begin{cases}
+    0  & S_T \leq K \\
+    S_T-K  & S_T \geq K
+    \end{cases}
+\end{align*}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Definition 0.3: Pricing and hedging in a binary model]
+The \textit{arbitrage price} of the option is interpreted as the initial cost $\alpha S_0 + \$\beta$ of the portfolio hedging the claim $\mathcal{C}$
+\end{tcolorbox}
+
+\newpage
+\subsection{(2.4) Risk-Neutral Probability Measures}
+Bunch of theorem below...
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Theorem 2.5]
+A market is \textit{without} arbitrage opportunity $\iff$ It admits at least one (equivalent\footnote{Referring to Definition 2.4; A probability measure $\mathbb{P}^*$ on $(\Omega, \mathcal{F})$ is said to be \textit{equivalent} to another probability measure $\mathbb{P}$ when $\mathbb{P}^*(A)=0 \iff \mathbb{P}(A)=0$ for all $A \in \mathcal{F}$}) risk-neutral probability measure $\mathbb{P}^*$
+\end{tcolorbox}
+
+\subsection{(2.6) Market Completeness}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Definition 2.10: Pricing and hedging in a binary model]
+A market model is said to be \textit{complete} if every contingent claim $\mathcal{C}$ is attainable.
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Definition 2.11: Pricing and hedging in a binary model]
+A market model without arbitrage opportunities is complete $\iff$ It admits only one (equivalent) risk-neutral probability measure $\mathbb{P}^*$.
+\end{tcolorbox}
+
+\newpage
+\section{(3) Discrete-Time Model}
+\subsection{(3.5) Multingales and Conditional Expectation}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Definition 3.4]
+A stochastic process $(M_t)_{t=0,1,...,N}$ is called a discrete-time \underline{martingale} with respect to the filtration $(\mathcal{F}_t)_{t=0,1,...,N}$ if $(M_t)_{t=0,1,...,N}$ is $(\mathcal{F}_t)_{t=0,1,...,N}$-adapted and satisfies the property
+\begin{align*}
+    && \mathbb{E}[M_{t+1} | \mathcal{F}_t] = M_t, && t=0,1,...,N-1.
+\end{align*}
+\end{tcolorbox}
+\ \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Proposition 3.5]
+Let $(Z_n)_{n \in \mathbb{N}}$ be martingale, we have
+\begin{align*}
+    && \mathbb{E}[Z_{n}] = \mathbb{E}[Z_{0}], && n \in \mathbb{N}
+\end{align*}
+\end{tcolorbox}
+
+\subsection{(3.6) Market Completeness and Risk-Neutral Measures}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Definition 3.8]
+A probability measure $\mathbb{P}^*$ on $\Omega$ is called a rick-neutral measure if
+\begin{align*}
+    && \mathbb{E}^*\left[S_{t+1}^{(i)}\bigg| \mathcal{F}_t \right]=(1+r)S_{t}^{(i)}, && i=1,2,...,d
+\end{align*}
+\end{tcolorbox}
+\ \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Definition 3.9]
+A probability measure $\mathbb{P}^*$ on $\Omega$ is called a rick-neutral measure if
+\begin{align*}
+    && \Tilde{S}_{t}^{(i)}:= \frac{S_t^{(i)}}{(1+r)^t}, && t=0,1,...,n
+\end{align*}
+is a martingale under $\mathbb{P}^*$, \textit{i.e.}
+\begin{align*}
+    && \mathbb{E}^*\left[\Tilde{S}_{t+1}^{(i)}\bigg| \mathcal{F}_t \right]=\Tilde{S}_{t}^{(i)}, && t=0,1,...,N-1
+\end{align*}
+$i=0,1,...,d$.
+\end{tcolorbox}
+
+
+\newpage
+\subsection{(3.7) The Cox-Ross-Rubinstein (CRR) Market Model}
+Consider the portfolio consists of
+\begin{itemize}
+    \item Risk-free asset priced as
+    \begin{align*}
+    S_t^{(0)} =S_0^{(0)} (1+r)^t, && t=0,1,...,N
+    \end{align*}
+    \item Risky asset priced as
+    \begin{align*}
+        S_t^{(1)} = S_0^{(1)}\prod^t_{k=1}(1+R_k), && t=0,1,...,N
+    \end{align*}
+    where $R_t \in \{a,b \}$,     $t=1,2,...,N$
+\end{itemize}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Theorem 3.15]
+The CRR model is without arbitrage opportunities if and only if $a<r<b$. In this case the market is complete and the (equivalent) risk-neutral probability measure $\mathbb{P}^*$ is given by
+\begin{align*}
+    \mathbb{P}^*(R_{t+1}=b|\mathcal{F}_t)=\frac{r-a}{b-a} \text{\ \ \ \ and\ \ \ \ }\mathbb{P}^*(R_{t+1}=a|\mathcal{F}_t)=\frac{b-r}{b-a}
+\end{align*}
+$t=0,1,...,N-1$. In particular, $(R_1,R_2,...R_N)$ forms a sequence of \textit{i.i.d} random variables under $\mathbb{P}^*$, with
+\begin{align*}
+    p^* := \mathbb{P}^*(R_{t}=b)=\frac{r-a}{b-a} \text{\ \ \ \ and\ \ \ \ } q^* := \mathbb{P}^*(R_{t}=a)=\frac{b-r}{b-a}
+\end{align*}
+\end{tcolorbox}
+
+
+
+\newpage
+\section{(4) Pricing and Hedging in Discrete Time}
+\subsection{(4.1) Pricing of Contingent Claims}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Lemma 4.2]
+The following statements are equivalent:
+\begin{itemize}
+    \item (i) The portfolio strategy $(\Bar{\xi}_t)_{t=1,2,...,N}$ is self-financing \\
+    \item (ii) $\Bar{\xi}_t \cdot \Bar{X}_t = \Bar{\xi}_{t+1} \cdot \Bar{X}_t$ for all $t=1,2,...,N-1$. \\
+    \item (iii) The discounted portfolio value $\Tilde{V}_t$ can be written as the stochastic summation
+    \begin{align*}
+        \Tilde{V}_t = \Tilde{V}_0 + \underbrace{\sum^t_{k=1}\Bar{\xi}_k \cdot (\Bar{X}_k - \Bar{X}_{k-1})}_\text{sum of profits and losses}, && t=0,1,...,N,
+    \end{align*}
+    of discounted profits and losses.
+\end{itemize}
+\end{tcolorbox}
+
+
+\newpage
+\section{(5.4) Ito Stochastic Integral: Ito Isometry}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Proposition 5.9; Ito Isometry]
+\begin{align*}
+    Var\left[\int^T_0 f(t)dB_t \right] = \mathbb{E}\left[\left(\int^T_0 f(t)dB_t \right)^2 \right] = \int^T_0 \big|f(t)\big|^2 dt
+\end{align*}
+\end{tcolorbox}
+
+Application of Ito Isometry \\
+\begin{itemize}
+    \item i.e.1)\\
+    \begin{align*}
+    \mathbb{E}\left[\left(\int^T_0 B_t dB_t \right)^2 \right] = \mathbb{E}\left[\int^T_0 \big|B_t\big|^2 dt \right] = \int^T_0 \mathbb{E}\left[ \big|B_t\big|^2 \right]dt = \int^T_0 tdt = \frac{T^2}{2}
+    \end{align*}
+    \item i.e.2) For all square-integrable adapted processes $(u_t)_{t \in \mathbb{R}_+}$, $(v_t)_{t \in \mathbb{R}_+}$\\
+    \begin{align*}
+    \mathbb{E}\left[\int^T_0 u_t dB_t \int^T_0 v_t dB_t \right] = \mathbb{E}\left[ \int^T_0 u_t v_t dt \right]
+    \end{align*}
+\end{itemize}
+
+\end{document}
