@@ -449,6 +449,31 @@ The arbitrage price $\pi_t (C)$ of an attainable conntingent claim $C$ is given 
 where $\mathbb{P}^*$ denotes any risk-neutral probability measure.
 \end{tcolorbox}
 
+\subsection{(4.2) Pricing of Vanilla Options in the CRR Model}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Proposition 4.8]
+The price $\pi_t(C)$ of the contingent claim $C=f(S_N^{(1)})$ satisfies
+\begin{align*}
+    && \pi_t(C) = v(t,S_t^{(1)}), && t=0,1,...,N
+\end{align*}
+where the function $v(t,x)$ is given by
+\begin{align*}
+    v(t,x) &= \frac{1}{(1+r)^{N-t}}\mathbb{E}^* \left[ f\left(x\prod^N_{j=t+1}(1+R_j) \right)\right]\\
+    &= \frac{1}{(1+r)^{N-t}} \sum^{N-t}_{k=0} \binom{N-t}{k}(p^*)^k (1-p^*)^{N-t-k}f(x(1+b)^k (1+a)^{N-t-k})
+\end{align*}
+\end{tcolorbox}
+\ \\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Useful note; Binomial Identity and Coefficient]
+\begin{itemize}
+    \item Binomial Identity
+    \begin{align*}
+    (x+y)^n = \sum_{k=0}^n \binom{n}{k} x^{n-k} y^k
+    \end{align*}
+    \item Binomial Coefficient
+    \begin{align*}
+    \binom{n}{k}=\frac{n!}{k!(n-k)!}
+    \end{align*}
+\end{itemize}
+\end{tcolorbox}
 
 \newpage
 \section{(5.4) Ito Stochastic Integral: Ito Isometry}
