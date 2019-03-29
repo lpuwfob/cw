@@ -54,14 +54,19 @@ ds.summary$SS[1]
 B
 ds.summary$SS[2]
 W
+round(B+W,3)
 
 det(W)
 det(B+W)
 det(W)/det(B+W)
+lambda <- det(W)/det(B+W)
+7.5*(1-sqrt(lambda))/sqrt(lambda)
+qf(.95, 8,60)
+
 summary(ds.manova, 'Wilks')$stats[,2][1]
 
--32.5*log(det(W)/det(B+W))
-qchisq(.95, df=4)
+-31.5*log(lambda)
+qchisq(.95, df=8)
 
 #Q2
 standard.df <- scale(ds[,3:6])
@@ -75,6 +80,7 @@ ev <- eigen(sample.cov)
 # check
 pca
 (ev$values)^(1/2)
+ev$values
 ev$vectors
 
 100*ev$values[1]/sum(ev$values)

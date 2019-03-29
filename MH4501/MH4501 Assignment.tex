@@ -67,23 +67,23 @@ Matriculation: \underline{\texttt{N1804369J}}}
     & Source of variation & SSCP & df & \\ \hline 
     & Treatments & $B=\left(
     \begin{array}{cccc}
-      1.051 & 2.173 & -1.376 & -0.760 \\
-      2.173 & 4.880 & -2.373 & -1.257 \\
-      -1.376 & -2.373 & 2.382 & 1.384 \\
+      1.051 & & & \\
+      2.173 & 4.880 & & \\
+      -1.376 & -2.373 & 2.382 & \\
       -0.760 & -1.257 & 1.384 & 0.811
-    \end{array} \right)$ & $G-1=2$  & \\ \\[0.01cm]
+    \end{array} \right)$ & $G-1=2$  & \\
     & Residuals & $W=\left(
     \begin{array}{cccc}
-      13.408 & 7.723 & 8.675 & 5.864 \\
-      7.723 & 8.480 & 7.526 & 6.213 \\
-      8.675 & 7.527 & 11.608 & 7.038 \\
+      13.408 & & & \\
+      7.723 & 8.480 & & \\
+      8.675 & 7.527 & 11.608 & \\
       5.864 & 6.213 & 7.038 & 10.566
     \end{array} \right)$ & $\sum_{g=1}^G n_g - G=33$  & \\ \hline
     & Total & $B+W=\left(
     \begin{array}{cccc}
-      14.459 & 9.897 & 7.299 & 5.104 \\
-      9.897 & 13.360 & 5.153 & 4.957 \\
-      7.299 & 5.153 & 13.990 & 8.422 \\
+      14.459 & & & \\
+      9.897 & 13.360 & & \\
+      7.299 & 5.153 & 13.990 & \\
       5.104 & 4.957 & 8.422 & 11.376
     \end{array} \right)$ & $\sum_{g=1}^G n_g - 1=35$  & \\ \hline \hline
   \end{tabular*}
@@ -124,15 +124,25 @@ for(g in 1:3){
 \begin{align*}
     \Lambda^* = \frac{det(W)}{det(W+B)} = \frac{1315.113}{5858.295} = 0.224
 \end{align*}
-\flushleft{Assume $n=\sum_{g=1}^G n_g=36$ is large enough, by Bartlett's approximation we have}
+\flushleft{Since $p=4 \geq 1$, $G=3$, from the table Lecture \#5 P-14 we have}
 \begin{align*}
-    -\left( n-1-\frac{p+G}{2} \right)ln \Lambda^* &= -\left( 36-1-\frac{2+3}{2} \right)ln(0.224)\\
-    &= 48.553\\
-    &\sim \chi^2 (2(3-1)) = \chi^2 (4)
+    \frac{\sum n_g -p-2}{p}\times \frac{1-\sqrt{\Lambda^*}}{\sqrt{\Lambda^*}} \sim F(2p, 2(\sum n_g -p-2))
 \end{align*}
-\flushleft{Since $\chi^2_{0.05}[4]=9.488 < 48.553$, we reject $H_0$}\\
+\flushleft{Using this we have}
+\begin{align*}
+    \frac{36 -4-2}{4}\times \frac{1-\sqrt{0.224}}{\sqrt{0.224}} &\sim F(2\times 4, 2(36 -4-2))\\
+    \Rightarrow  8.33 &\sim F(8, 60)
+\end{align*}
+\flushleft{Since $F_{0.95}(8,60) = 2.10 < 8.33$, we reject $H_0$\\
 \ \\
-
+Or, assume $n=\sum_{g=1}^G n_g=36$ is large enough, by Bartlett's approximation we have}
+\begin{align*}
+    -\left( n-1-\frac{p+G}{2} \right)ln \Lambda^* &= -\left( 36-1-\frac{4+3}{2} \right)ln(0.224)\\
+    &= 47.059\\
+    &\sim \chi^2 (4(3-1)) = \chi^2 (8)
+\end{align*}
+\flushleft{Since $\chi^2_{0.05}[4]=15.507 < 47.059$, we reject $H_0$ in this method as well.}\\
+\newpage
 \begin{lstlisting}[caption=R code for Q1 (b)]
 #Q1 (b)
 ds.manova <- manova(as.matrix(ds[,3:6]) ~ as.factor(ds$method))
@@ -144,8 +154,15 @@ det(B+W)
 det(W)/det(B+W)
 summary(ds.manova, 'Wilks')$stats[,2][1]
 
--32.5*log(det(W)/det(B+W))
-qchisq(.95, df=4)
+lambda <- det(W)/det(B+W)
+
+# 1st test
+7.5*(1-sqrt(lambda))/sqrt(lambda)
+qf(.95, df1=8, df2=60)
+
+# 2nd test
+-31.5*log(lambda)
+qchisq(.95, df=8)
 \end{lstlisting}
 \end{solution}
 
