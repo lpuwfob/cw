@@ -1,0 +1,288 @@
+% --------------------------------------------------------------
+% This is all preamble stuff that you don't have to worry about.
+% Head down to where it says "Start here"
+% --------------------------------------------------------------
+ 
+\documentclass[12pt]{article}
+ 
+\usepackage[margin=1in]{geometry} 
+\usepackage{mathtools,amsthm,amssymb,dsfont}
+\usepackage{hyperref}
+ 
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{reflection}[2][Reflection]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{proposition}[2][Proposition]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+% Created
+\newenvironment{solution}[2][Solution]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\begin{document}
+ 
+% --------------------------------------------------------------
+%                         Start here
+% --------------------------------------------------------------
+ 
+%\renewcommand{\qedsymbol}{\filledbox}
+ 
+\title{Assignment 3 - MH4514 Financial Mathematics}
+\author{Name: \ \ \ \ \ \ \  \underline{\texttt{Honda Naoki}}\\ 
+Matriculation: \underline{\texttt{N1804369J}}} 
+
+\maketitle
+
+\begin{question}{1}
+\end{question}
+\begin{solution}[Solution] \\ 
+\flushleft{Using the properties of covariance and Ito multiplication table, we can calculate the fraction as}
+\begin{align*}
+    \frac{Cov\left(\frac{dS_t}{S_t}, \frac{dM_t}{M_t}\right)}{Var\left[\frac{dM_t}{M_t}\right]} &= \frac{Cov\left(rdt+\beta \left(\frac{dM_t}{M_t}-rdt\right)+\sigma_S dW_t, \frac{dM_t}{M_t} \right)}{Var\left[\frac{dM_t}{M_t}\right]}\\
+    &= \frac{Cov\left(\beta \frac{dM_t}{M_t} , \frac{dM_t}{M_t} \right)}{Var\left[\frac{dM_t}{M_t}\right]} = \beta
+\end{align*}
+\end{solution}
+
+\ \\
+\ \\
+\begin{question}{2}
+\end{question}
+\begin{solution}[Solution] \\ 
+\flushleft{By (1) and (2), observe that the evolution of $(S_t)_{t \in \mathbb{R}_+}$ is given by}
+\begin{align*}
+    \frac{dS_t}{S_t} &= rdt+ \beta \left(\frac{dM_t}{M_t}-rdt\right) +\sigma_S dW_t \\
+    &= (r+\beta(\mu - r))dt+ \beta \sigma_M dB_t +\sigma_S dW_t
+\end{align*}
+\flushleft{Now, consider its volatility, by squaring both side we have}
+\begin{align*}
+    \left(\frac{dS_t}{S_t}\right)^2 &= \left((r+\beta(\mu - r))dt+ \beta \sigma_M dB_t +\sigma_S dW_t\right)^2\\
+    &= \left( \beta^2 \sigma_M^2 +\sigma_S^2\right) dt
+\end{align*}
+\flushleft{Thus, we can think of $(S_t)_{t \in \mathbb{R}_+}$ as a geometric Brownian motion with volatility $\sqrt{\beta^2 \sigma_M^2 +\sigma_S^2}$. Finally with the excess return $\alpha$, we can express its evolution as}
+\begin{align*}
+    \frac{dS_t}{S_t} &= (r+\alpha+\beta(\mu -r))dt+ \sqrt{\beta^2 \sigma_M^2 +\sigma_S^2} dW_t \\
+    dS_t &= (r+\alpha+\beta(\mu -r))S_t dt+ \sqrt{\beta^2 \sigma_M^2 +\sigma_S^2} S_t dW_t
+\end{align*}
+\end{solution}
+
+
+\newpage
+\begin{question}{3}
+\end{question}
+\begin{solution}[Solution] \\ 
+\flushleft{Consider the equations (1), we have}
+\begin{align*}
+\frac{dM_t}{M_t} &= \mu dt + \sigma_M dB_t \\
+&= rdt +\sigma_M \left( dB_t + \frac{\mu -r}{\sigma_M}dt \right)\\
+&= rdt +\sigma_M dB_t^* \qquad \qquad \qquad \left(\text{where\ \ \ \ \ } dB_t^* = \left( dB_t + \frac{\mu -r}{\sigma_M}dt \right) \right)
+\end{align*}
+\flushleft{Next, we can rewrite (2) as}
+\begin{align*}
+    \frac{dS_t}{S_t} &= rdt+ \beta(M_t) \left(\frac{dM_t}{M_t}-rdt\right) +\sigma_S dW_t\\
+    &= rdt+ \beta(M_t) (rdt +\sigma_M dB_t^*-rdt) +\sigma_S dW_t\\
+    &= rdt+ \sigma_M \beta(M_t) dB_t^*+\sigma_S dW_t^*  \qquad \qquad \qquad \left(\text{where\ \ \ \ \ } dW_t^* = dW_t \right)
+\end{align*}
+\flushleft{Hence, by setting $B_t^* = \left( B_t + \frac{\mu -r}{\sigma_M}t \right)$ and $W_t^* = W_t$ we have }
+\begin{align*}
+    \begin{dcases}
+    \frac{dM_t}{M_t} &= rdt +\sigma_M dB_t^*\\[10pt]
+    \frac{dS_t}{S_t} &= rdt+ \sigma_M \beta(M_t) dB_t^*+\sigma_S dW_t^*
+    \end{dcases}
+\end{align*}
+\end{solution}
+
+\ \\
+\ \\
+\begin{question}{4}
+\end{question}
+\begin{solution}[Solution] \\ 
+\flushleft{Consider the new probability measure $\mathbb{P}^*$ defined on $\mathcal{F}_T$ by}
+\begin{align*}
+    \frac{d\mathbb{P}^*}{d\mathbb{P}}= \text{exp}\bigg\{ -\frac{\mu-r}{\sigma_M}B_T -\frac{1}{2}\bigg( \frac{\mu-r}{\sigma_M} \bigg)^2 T \bigg\}
+\end{align*}
+\flushleft{Setting}
+\begin{align*}
+    B^*_t = B_t + \frac{\mu-r}{\sigma_M}t,\qquad W^*_t = W_t
+\end{align*}
+\flushleft{then under $\mathbb{P}^*$, the processes $(B^*_t)_{t \in \mathbb{R}_+}$ and $(W^*_t)_{t \in \mathbb{R}_+}$ are two independent standard Brownian motions.}
+\end{solution}
+
+\newpage
+\begin{question}{5}
+\end{question}
+\begin{solution}[Solution] \\ 
+\flushleft{From Question 4, we know under $\mathbb{P}^*$, the processes $(B^*_t)_{t \in \mathbb{R}_+}$ and $(W^*_t)_{t \in \mathbb{R}_+}$ are two independent standard Brownian motions. Using this, the discounted asset price processes $(\Tilde{S}_t, \Tilde{M}_t)_{t \in \mathbb{R}_+}$ can be shown as martingales.}
+\begin{align*}
+    \mathbb{E}^*\left[\Tilde{M}_t \big|\mathcal{F}_k\right] &= e^{-rt}\mathbb{E}^*\left[\int^t_0 rM_u du + \sigma_M \int^t_0 M_u dB_u^* \bigg|\mathcal{F}_k\right]\\
+    &= e^{-rt} \mathbb{E}^*\left[\int^t_0 rM_u du \bigg|\mathcal{F}_k\right] = e^{-rt} e^{(t-k)r}M_k\\
+    &= \Tilde{M_k}
+\end{align*}
+\begin{align*}
+    \mathbb{E}^*\left[\Tilde{S}_t \big|\mathcal{F}_k\right] &= e^{-rt}\mathbb{E}^*\left[\int^t_0 rS_u du + \sigma_M \int^t_0 \beta(M_u) S_u dB_u^* +\sigma_S \int^t_0 S_u dW_u^* \bigg|\mathcal{F}_k\right]\\
+    &= e^{-rt}\mathbb{E}^*\left[\int^t_0 rS_u du \bigg|\mathcal{F}_k\right] = e^{-rt} e^{(t-k)r}S_k\\
+    &= \Tilde{S_k}
+\end{align*}
+\flushleft{From Proposition 6.6, the probability measure $\mathbb{P}^*$ is risk-neutral since the discounted risky asset price processes $(\Tilde{S}_t, \Tilde{M}_t)_{t \in \mathbb{R}_+}$ are multingales under $\mathbb{P}^*$. \\
+\ \\
+Hence, by Theorem 6.8, the market based on the assets $S_t$ and $M_t$ is without arbitrage opportunities since it admits at least one equivalent risk-neutral probability measure $\mathbb{P}^*$.}
+\end{solution}
+
+\ \\
+\begin{question}{6}
+\end{question}
+\begin{solution}[Solution] \\ 
+\flushleft{By Ito's calculus we have}
+\begin{align*}
+    \begin{split}
+        dV_t &= \xi_t dS_t + S_t d\xi_t + d\xi_t dS_t \\
+        &\quad + \zeta_t dM_t + M_t d\zeta_t + d\zeta_t dM_t \\
+        &\qquad + \eta_t dA_t + A_t d\eta_t + d\eta_t dA_t
+    \end{split}\\
+\end{align*}
+\flushleft{Here, since we know $S_t d\xi_t + M_t d\zeta_t + A_t d\eta_t=0$ being true under the self-financing condition, and $d\xi_t dS_t = d\zeta_t dM_t = d\eta_t dA_t = 0$, we can rewrite $dV_t$ as}
+\begin{align*}
+    dV_t = \xi_t dS_t + \zeta_t dM_t + \eta_t dA_t
+\end{align*}
+\end{solution}
+
+\newpage
+\begin{question}{7}
+\end{question}
+\begin{solution}[Solution] \\ 
+\flushleft{From Question 2 and the same derivation of Question 3 we have}
+\begin{align*}
+    \begin{dcases}
+    dM_t &= rM_t dt +\sigma_M M_t dB_t^*\\[10pt]
+    dS_t &= rS_t dt+ \sigma_M \beta(M_t)S_t dB_t^*+\sigma_S S_t dW_t^*
+    \end{dcases}
+\end{align*}
+\flushleft{Using the above system and Ito's formula\footnote{In the text book, P191, (5.5.7)}, we have\footnote{Here we omit the argument bracket of function $f(t, S_t, M_t)$ for the sake of simplicity}}
+\begin{align*}
+    df(t,S_t, M_t) = \bigg\{\frac{\partial f}{\partial t}& + \frac{1}{2}\bigg(\sigma_M^2 \beta^2(M_t) +\sigma_S^2\bigg)S_t^2 \frac{\partial^2 f}{\partial x^2} +\frac{1}{2}\sigma_M^2 M_t^2 \frac{\partial^2 f}{\partial y^2} + \beta(M_t)\sigma_M^2 M_t S_t\frac{\partial^2 f}{\partial x \partial y}\bigg\}dt \\
+    &+ \frac{\partial f}{\partial x}dS_t +\frac{\partial f}{\partial y}dM_t
+\end{align*}
+\flushleft{Further expand $dS_t$ and $dM_t$ we have}
+\begin{align*}
+    df(t,S_t, M_t) = \bigg\{\frac{\partial f}{\partial t} &+ \frac{1}{2}\bigg(\sigma_M^2 \beta^2(M_t) +\sigma_S^2\bigg)S_t^2 \frac{\partial^2 f}{\partial x^2} + \frac{1}{2}\sigma_M^2 M_t^2 \frac{\partial^2 f}{\partial y^2} \\
+    &+ \beta(M_t)\sigma_M^2 M_t S_t\frac{\partial^2 f}{\partial x \partial y} + r\left(S_t\frac{\partial f}{\partial x} +M_t\frac{\partial f}{\partial y} \right)\bigg\}dt \\
+    &\qquad +\bigg(\sigma_M \beta(M_t)S_t \frac{\partial f}{\partial x} + \sigma_M M_t\frac{\partial f}{\partial y} \bigg)dB_t^* +\sigma_S S_t \frac{\partial f}{\partial x}dW_t^*
+    \tag{7.1}
+\end{align*}
+\flushleft{Using the self-financing condition of Question 6, we also can express $df(t,S_t, M_t)$ as follows}
+\begin{align*}
+    df(t,S_t, M_t) &= dV_t = \xi_t dS_t + \zeta_t dM_t + \eta_t dA_t \\
+    &= \xi_t (rS_t dt+ \sigma_M \beta(M_t)S_t dB_t^*+\sigma_S S_t dW_t^*) + \zeta_t (rM_t dt +\sigma_M M_t dB_t^*) + r\eta_t A_t dt\\
+    &= rf(t,S_t, M_t)dt + (\sigma_M \beta(M_t)\xi_t S_t + \zeta_t\sigma_M M_t )dB_t^* +\sigma_S \xi_t S_t dW_t^*
+    \tag{7.2}
+\end{align*}
+\flushleft{By identification of the term in $dt$ in (7.1) and (7.2) we get the PDE with the terminal condition:}
+\begin{align*}
+\begin{dcases}
+    rf(t,x, y) &= \frac{\partial f}{\partial t} + \frac{1}{2}\bigg(\sigma_M^2 \beta^2(M_t) +\sigma_S^2\bigg)x^2 \frac{\partial^2 f}{\partial x^2} +\frac{1}{2}\sigma_M^2 y^2 \frac{\partial^2 f}{\partial y^2}  \\
+    &\quad+ \beta(M_t)\sigma_M^2 xy\frac{\partial^2 f}{\partial x \partial y} + r\left( x\frac{\partial f}{\partial x} +y\frac{\partial f}{\partial y} \right)\\[10pt]
+    f(T,x,y)&=h(x, y)
+\end{dcases}
+\end{align*}
+\end{solution}
+
+
+\newpage
+\begin{question}{8}
+\end{question}
+\begin{solution}[Solution] \\ 
+\flushleft{Similar to the way we derived the PDE, by identifying the coefficient on $dB_t^*$ and $dB_t^*$ in (7.1)-(7.2) we have system of equation}
+\begin{align*}
+    \begin{dcases}
+    \sigma_M \beta(M_t)S_t \frac{\partial f}{\partial x} + \sigma_M M_t\frac{\partial f}{\partial y} = \sigma_M \beta(M_t)\xi_t S_t + \zeta_t\sigma_M M_t \\[10pt]
+    \sigma_S S_t \frac{\partial f}{\partial x} = \sigma_S \xi_t S_t 
+    \end{dcases}
+\end{align*}
+\flushleft{which gives a solution}
+\begin{align*}
+    \xi_t = \frac{\partial f}{\partial x}(t,x,y), \qquad \zeta_t =\frac{\partial f}{\partial y}(t,x,y).
+\end{align*}
+\flushleft{For $\eta_t$, from previous result and the definition of the portfolio price $V_t$ we have}
+\begin{align*}
+    \eta_t A_t &= V_t - \xi_t S_t - \zeta_t M_t \\
+    &= f(t,x,y) - S_t\frac{\partial f}{\partial x}(t,x,y) - M_t\frac{\partial f}{\partial y}(t,x,y)\\
+    \eta_t &= \frac{1}{A_0 e^{rt}} \left\{f(t,x,y) - S_t\frac{\partial f}{\partial x}(t,x,y) - M_t\frac{\partial f}{\partial y}(t,x,y)\right\}
+\end{align*}
+\end{solution}
+\ \\
+\begin{question}{9}
+\end{question}
+\begin{solution}[Solution] \\ 
+\flushleft{From Question 7, with constant $\beta$ and terminal condition of a call option payoff, we have PDE of}
+\begin{align*}
+\begin{dcases}
+    rf(t,x, y) &= \frac{\partial f}{\partial t} + \frac{1}{2}\bigg(\sigma_M^2 \beta^2 +\sigma_S^2\bigg)x^2 \frac{\partial^2 f}{\partial x^2} +\frac{1}{2}\sigma_M^2 y^2 \frac{\partial^2 f}{\partial y^2}  \\
+    &\quad+ \beta\sigma_M^2 xy\frac{\partial^2 f}{\partial x \partial y} + r\left( x\frac{\partial f}{\partial x} +y\frac{\partial f}{\partial y} \right)\\[10pt]
+    f(T,x,y)&=(x-K)^+
+\end{dcases}
+\end{align*}
+\flushleft{Noticing by the terminal condition, we think of $f(t,x,y)$ as a function of $t,x$, which has a solution of}
+\begin{align*}
+    f(t,x;K) = 
+    \begin{dcases}
+        x\Phi(d_+(T-t,x;K))-e^{-r(T-t)}K\Phi(d_-(T-t,x;K)) &0\leq t < T\\
+        (x-K)^+ &t=T
+    \end{dcases}
+\end{align*}
+\flushleft{where}
+\begin{align*}
+    d_\pm(s,x;K) &:= \frac{1}{\sqrt{s(\sigma_M^2 \beta^2 + \sigma_S^2)}}\left[ log\left(\frac{x}{K}\right)+s \left( r \pm \frac{\sigma_M^2 \beta^2 + \sigma_S^2}{2}\right)\right] \\
+    \Phi(z) &:= \frac{1}{\sqrt{2\pi}}\int^z_{-\infty}e^{-u^2/2}du
+\end{align*}
+
+\flushleft{The hedging portfolio is}
+\begin{align*}
+    \xi_t = \frac{\partial f}{\partial x}(t,x;K) = \Phi(d_+(T-t,x;K)), \qquad \zeta_t =\frac{\partial f}{\partial y}(t,x;K)=0
+\end{align*}
+\begin{align*}
+    \eta_t &= \frac{1}{A_0 e^{rt}} \big(f(t,x;K) - S_t\xi_t - M_t\zeta_t \big)\\
+    &= -\frac{K}{A_0e^{rT}}\Phi(d_-(T-t,x;K))
+\end{align*}
+\flushleft{Thus, the replicating portfolio consists of holding a quantity $\xi_t=\Phi(d_+(T-t,x;K)) \geq 0$ of risky asset $S_t$, and borrowing a quantity $-\eta_t = \frac{K}{A_0e^{rT}}\Phi(d_-(T-t,x;K)) \geq 0$ of the riskless asset $A_t$.}
+\end{solution}
+
+\ \\
+\begin{question}{10}
+\end{question}
+\begin{solution}[Solution] \\ 
+\flushleft{The payoff function of put option can be expressed as}
+\begin{align*}
+    h(S_T) = (K-S_T)^+ = -(S_T -K)+(S_T -K)^+
+\end{align*}
+\flushleft{Hence, with the result of Question 9, we can compute the pricing function at time $t \ (\leq T)$ as}
+\begin{align*}
+    f(t,x;K) &= -(x-e^{-r(T-t)}K)+ x\Phi(d_+(T-t,x;K))-e^{-r(T-t)}K\Phi(d_-(T-t,x;K))\\
+    &= e^{-r(T-t)}K \big(1-\Phi(d_-(T-t,x;K))\big) - x\big(1-\Phi(d_+(T-t,x;K))\big)\\
+    &= e^{-r(T-t)}K \Phi(-d_-(T-t,x;K)) - x\Phi(-d_+(T-t,x;K))
+\end{align*}
+\flushleft{(Here we used the relation $1-\Phi(a)=\Phi(-a)$)\\
+\ \\
+The hedging portfolio is}
+\begin{align*}
+    \xi_t = \frac{\partial f}{\partial x}(t,x;K)=-\Phi(-d_+(T-t,x;K)), \qquad \zeta_t =\frac{\partial f}{\partial y}(t,x;K)=0
+\end{align*}
+\begin{align*}
+    \eta_t &= \frac{1}{A_0 e^{rt}} \big(f(t,x;K) - S_t\xi_t- M_t \zeta_t\big)\\
+    &= \frac{K}{A_0e^{rT}} \Phi(-d_-(T-t,x;K))
+\end{align*}
+\flushleft{Thus, the replicating portfolio consists of short selling a quantity $-\xi_t=\Phi(-d_+(T-t,x;K)) \geq 0$ of risky asset $S_t$, and investing (saving) a quantity $\eta_t = \frac{K}{A_0e^{rT}} \Phi(-d_-(T-t,x;K)) \geq 0$ of the riskless asset $A_t$.}
+\end{solution}
+
+
+% --------------------------------------------------------------
+% You don't have to mess with anything below this line.
+% --------------------------------------------------------------
+ 
+\end{document}
