@@ -1,0 +1,734 @@
+\documentclass[12pt]{extarticle}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins} %preamble
+\usepackage{tabularx}
+%Some packages I commonly use.
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{enumerate}
+\usepackage[utf8]{inputenc}
+\usepackage[top=1 in,bottom=1in, left=1 in, right=1 in]{geometry}
+
+%A bunch of definitions that make my life easier
+\newcommand{\matlab}{{\sc Matlab} }
+\newcommand{\cvec}[1]{{\mathbf #1}}
+\newcommand{\rvec}[1]{\vec{\mathbf #1}}
+\newcommand{\ihat}{\hat{\textbf{\i}}}
+\newcommand{\jhat}{\hat{\textbf{\j}}}
+\newcommand{\khat}{\hat{\textbf{k}}}
+\newcommand{\minor}{{\rm minor}}
+\newcommand{\trace}{{\rm trace}}
+\newcommand{\spn}{{\rm Span}}
+\newcommand{\rem}{{\rm rem}}
+\newcommand{\ran}{{\rm range}}
+\newcommand{\range}{{\rm range}}
+\newcommand{\mdiv}{{\rm div}}
+\newcommand{\proj}{{\rm proj}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\<}{\langle}
+\renewcommand{\>}{\rangle}
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\attn}[1]{\textbf{#1}}
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem*{definition}{Definition}
+\newtheorem*{example}{Example}
+\newtheorem*{note}{Note}
+\newtheorem{exercise}{Exercise}
+\newcommand{\bproof}{\bigskip {\bf Proof. }}
+\newcommand{\eproof}{\hfill\qedsymbol}
+\newcommand{\Disp}{\displaystyle}
+\newcommand{\qe}{\hfill\(\bigtriangledown\)}
+\setlength{\columnseprule}{1 pt}
+
+\title{\textbf{MH4501 Multivariate Analysis}\\
+\Large - Final Revision -}
+\author{Naoki Honda}
+\date{May 2019}
+
+\begin{document}
+
+\maketitle
+\section{PCA: Principal Component Analysis}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Population PCA (Result 6.1)]
+Assume the population covariance matrix $\Sigma$ of random vector $X=(X_1,X_2,...,X_p)^T$ is known, and $\Sigma$ has eigenvalue-eigenvector pairs $(\lambda_1,e_1),(\lambda_2,e_2),...,(\lambda_p,e_p)$, subject to $\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_p \geq 0$. Then the $k$th \textbf{principal component} is given by
+\begin{align*}
+    Y_k = e_k^T X = e_{k1}X_1 +e_{k2}X_2 +\cdots +e_{kp}X_p \qquad k=1,2,...,p
+\end{align*}
+In addition,
+\begin{align*}
+    \text{Var}(Y_k) &=e_k^T \Sigma e_k =\lambda_k \qquad k=1,2,...,p \\
+    \text{Cov}(Y_j, Y_k) &= e_j^T \Sigma e_k =0 \qquad j \neq k \quad (j,k=1,2,...,p)
+\end{align*}
+\end{tcolorbox}
+
+\underline{Proof of Result 6.1}\\
+Let $U=(e_1,e_2,...,e_p)$ and $\Lambda=\text{diag}(\lambda_1,\lambda_2,...,\lambda_p)$. Thus $\Sigma =U\Lambda U^T$ is the eigenvalue decomposition of $\Sigma$. Denote $b=U^T a$. Then
+\begin{align*}
+    a^T \Sigma a=\frac{a^T \Sigma a}{a^T a} = \frac{a^T U\Lambda U^T a}{a^T UU^T a}= \frac{b^T \Lambda b}{b^T b} = \frac{\sum^p_{j=1}\lambda_j b^2_j}{\sum^p_{j=1} b^2_j} \leq \frac{\lambda_1 \sum^p_{j=1}b^2_j}{\sum^p_{j=1} b^2_j} = \lambda_1
+\end{align*}
+The maximum is attained when $a=e_1$, since it gives $b=U^T e_1 = (1,0,0,...,0)^T$, $b^T b =1$ and $b^T \Lambda b =\lambda_1$.\\
+This step shows that the 1st principal component is given by $Y_1 =e_1^T X$.\\
+
+Secondly, we prove: when the first $k$ $(k=1,2,...,p-1)$ principal component(s) $Y_1 =e_1^T X, Y_2 =e_2^T X, ..., Y_k =e_k^T X$ are decided, to have the $(k+1)$th principal component $Y_{k+1}=a^T_{k+1} X$ orthogonal to every one of $e_1,e_2,...,e_k$.\\
+For any $j=1,2,...,k$,
+\begin{align*}
+    \text{Cov}(Y_{k+1},Y_j) = \text{Cov}(a^T_{k+1}X,e_j X) = a^T_{k+1}\Sigma e_j = a^T_{k+1}(\lambda_j e_j) = \lambda_j a^T_{k+1}e_j
+\end{align*}
+So to have $\text{Cov}(Y_{k+1},Y_j)$ is equivalent to have $a^T_{k+1}e_j =0$.\\
+This step prepares for the next one.\footnote{The last part of the proof is omitted due to the similarity to the first part. Detail in P.9 - Lec \#6}\\
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Variance (Result 6.2)]
+\begin{align*}
+    \sum^p_{k=1} \text{Var}(Y_k) = \sum^p_{j=1} \text{Var}(X_j)
+\end{align*}
+\underline{Proof}:
+\begin{align*}
+    \sum^p_{k=1} \text{Var}(Y_k) = \sum^p_{k=1} \lambda_k &= \text{tr}(\Lambda) = \text{tr}(\Lambda U^T U) = \text{tr}(U \Lambda U^T)\\
+    &= \text{tr}(\Sigma) = \sum^p_{j=1}\sigma_{jj} = \sum^p_{j=1} \text{Var}(X_j)
+\end{align*}
+In practice, some popular quantities of interest are:\\ \ \\
+\begin{tabular}{rl}
+\% of variance explained by $\qquad$ &\\
+the $k$th principal component $Y_k$:& $\frac{\lambda_k}{\sum^p_{j=1}\lambda_j}$ $\qquad k=1,2,...,p$\\ \ \\
+Cumulative \% of variance explained by &\\
+the first $k$ principal components:& $\frac{\sum^k_{j=1}\lambda_j}{\sum^p_{j=1}\lambda_j}$ $\qquad k=1,2,...,p$
+\end{tabular}
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Correlation (Result 6.3)]
+\begin{align*}
+    \text{Cor}(Y_k, X_j) =\frac{e_{kj}\sqrt{\lambda_k}}{\sqrt{\sigma_{jj}}} \qquad k,j=1,2,...,p
+\end{align*}
+\underline{Proof}:\\
+Denote $d_j =(0,...,0,1_{j\text{th}},0,...,0)^T$ so that $X_j =d_j^T X$. Therefore
+\begin{align*}
+    \text{Cov}(Y_k, X_j)&= \text{Cov}(X_j, Y_k)\\
+    &=\text{Cov}(d_j^T X, e^T_k X)= d^T_j \Sigma e_k =d_j^T (\lambda_k e_k) = \lambda_k(d_j^T e_k) =\lambda_k e_{kj}
+\end{align*}
+In addition, $\text{Var}(Y_k)=\lambda_k$ and $\text{Var}(X_j)=\sigma_{jj}$. Thus
+\begin{align*}
+    \text{Cor}(Y_k, X_j)=\frac{\text{Cov}(Y_k, X_j)}{\sqrt{\text{Var}(Y_k)}\sqrt{\text{Var}(X_j)}} = \frac{e_{kj} \sqrt{\lambda_k}}{\sqrt{\sigma_{jj}}} \qquad k,j=1,2,...,p
+\end{align*}
+\end{tcolorbox}
+
+\newpage
+\subsection{Sample PCA}
+What we discussed previously still applies in sample PCA. While in addition, since we have a sample $x_1,x_2,...,x_n$, in PCA, we would as well have a value of every principal component on every observation: $y_{ik}$ $(i=1,2,...,n$ and $k=1,2,...,p)$. These values are called PCA \textbf{scores}.
+
+\subsection{Sample PCA - Standardized Variables}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Sample PCA on Standardized Variables (Result 6.6)]
+Assume we have realizations $x_1,x_2,...,x_n$ of random vector $X=(X_1,X_2,...,X_p)^T$, and the sample correlation matrix $R$ has eigenvalue-eigenvector pairs $(\lambda_1^Z,u_1),(\lambda_2^Z,u_2),...,(\lambda_p^Z,u_p)$, subject to $\lambda_1^Z \geq \lambda_2^Z \geq \cdots \geq \lambda_p^Z \geq 0$. Then the $k$th \textbf{sample principal component} obtained from standardized variables $Z=(Z_1,Z_2,...,Z_p)^T$ is given by
+\begin{align*}
+    Y_k^Z = u_k^T Z = u_{k1}Z_1 +u_{k2}Z_2 +\cdots +u_{kp}Z_p \qquad k=1,2,...,p
+\end{align*}
+and the value of $Y_k^Z$ on the $i$th observation is given by
+\begin{align*}
+    y^Z_{ik}=u^T_k z_i \qquad i=1,2,...,n \quad k=1,2,...,p
+\end{align*}
+Again $\text{Var}(Y^Z_k)=\lambda_k^Z$ $(k=1,2,...,p)$ and $\text{Cov}(Y^Z_j,Y^Z_k)=0$ $(j \neq k)$. In addition,
+\begin{align*}
+    \sum^p_{k=1}\text{Var}(Y^Z_k) = \sum^p_{j=1}\text{Var}(Z_j) = p
+\end{align*}
+and
+\begin{align*}
+    \text{Cor}(Y^Z_k, Z_j)=u_{kj} \sqrt{\lambda_k^Z} \qquad k,j=1,2,...,p
+\end{align*}
+\end{tcolorbox}
+
+
+\newpage
+\section{CA: Cluster Analysis}
+\subsection{Distance}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Distance]
+\renewcommand{\arraystretch}{2}
+\begin{tabular}{rl}
+Minkowski distance:& $d(x,y)=\Big[ \sum^p_{j=1} |x_j -y_j|^m \Big]^\frac{1}{m}$\\
+When $m=1$:& $d(x,y)=\sum^p_{j=1} |x_j -y_j|$ (Manhattan distance)\\
+When $m=2$:& $d(x,y)=\sqrt{\sum^p_{j=1} (x_j -y_j)^2}$ (Euclidiean distance)\\
+When $m \rightarrow \infty$:& $d(x,y)= \max_{j=1,2,...,p} |x_j -y_j|$ (Chebyshev distance)\\
+Mahalanobis distance:& $d(x,y)=\sqrt{(x-y)^T S^{-1} (x-y)}$\\
+& (variance of Euclidean distance relative to $S$)\\
+Canberra distance:& $d(x,y)=\sum^p_{j=1} \frac{|x_j -y_j|}{(x_j +y_j)}$\\
+& (weighted version of Manhattan distance)\\
+Czekanowski distance:& $d(x,y)=1-\frac{2\sum^p_{j=1}\min(x_j,y_j)}{\sum^p_{j=1}(x_j +y_j)}$
+\end{tabular}
+\end{tcolorbox}
+
+\subsection{K-means Clustering}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=K-means Clustering]
+Given a collection of observations $x_1,x_2,...,x_n$ and a well defined measure of distance $d()$, the K-means clustering works in an iterative fashion as below, with K, the desired number of clusters, pre-specified:
+\begin{enumerate}
+    \item Initialization: assign the $n$ observations into K clusters arbitrarily.\\
+    \item Find the center $C_k$ $(k=1,2,...,K)$ of each cluster (based on current assignments), by taking average (mean) of the observations in each cluster respectively.\\
+    \item Assign each observation $x_i$ $(i=1,2,...,n)$ to Cluster $k(i)$, by the criterion that
+    \begin{align*}
+        k(i)=\text{arg}\min_k d(C_k, x_i)
+    \end{align*}
+\end{enumerate}
+If any reassignment happens, go back to Step 2; Otherwise, the algorithm is completed.
+\end{tcolorbox}
+
+\subsection{Hierarchical Clustering}
+\textbf{Motivation}
+\begin{enumerate}
+    \item One major drawback of K-means clustering is that the desired number of clusters must be pre-specified, which is not always feasible.
+    \item Hierarchical clustering instead provides a whole "path", from one extreme situation, namely that each individual observation constitutes a cluster, to the other extreme situation, namely that all observations are in one single cluster. Thus, one is able to review the whole path before specifying $K$.
+    \item There are different algorithms to implement hierarchical clustering, while in this course we only discuss the \textbf{agglomerative hierarchical clustering}, which involves merging small clusters which are similar (in some sence) into larger ones.
+    \item Therefore, besides a measure of distance between two observations, we also need a measure of distance between two clusters, which is conventionally called a \textbf{linkage} function.
+\end{enumerate}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Linkage functions]
+\renewcommand{\arraystretch}{2}
+\begin{tabular}{rl}
+Single linkage:& $\min_{x\in A, y\in B} d(x,y)$\\
+Complete linkage:& $\max_{x\in A, y\in B}d(x,y)$\\
+Average linkage:& $\frac{1}{|A||B|}\sum_{x\in A}\sum_{y\in B}d(x,y)$\\
+Centroid linkage:& $d(\Bar{x}_A,\Bar{x}_B)$\\
+& where $\Bar{x}_A=\frac{1}{|A|}\sum_{x\in A}x$ and $\Bar{x}_B=\frac{1}{|B|}\sum_{x\in B}x$
+\end{tabular}
+\end{tcolorbox}
+
+Given a collection of observations $x_1,x_2,...,x_n$, a well defined measure of distance $d()$, and a pre-specified linkage function to measure distance between clusters, the agglomerative clustering works in an iterative fashion as below:\\
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Hierarchical Clustering (agglomerative)]
+\begin{enumerate}
+    \item Initialization: every individual observation constitutes a cluster respectively.\\
+    \item Calculate the distance (linkage) between every pair of clusters, find the pair that are closest to each other. Merge these two clusters into one cluster.\\
+    \item If all observations are in a single cluster, the alrorithm is completed. Otherwise, go back to Step 2.
+\end{enumerate}
+\end{tcolorbox}
+
+\newpage
+\section{DA: Discriminant Analysis}
+\subsection{Definition Preparation}
+\begin{itemize}
+    \item \textbf{Prior probabilities} measure the chance of an \textbf{unspecified} observation $(x)$ belonging to the populations:
+    \begin{align*}
+        p_k = Pr[x\in \pi_k] \quad \text{where} \quad k=1,2,...,K
+    \end{align*}
+    Clearly, it requires that $\sum^K_{k=1}p_k =1$
+    \begin{itemize}
+        \item When there is not enough prior knowledge, a naive choice of prior probability is simply $p_1 =p_2 =\cdots =p_K =\frac{1}{K}$
+        \item Alternatively, prior probabilities can be estimated from sample proportions of classes:
+        \begin{align*}
+            p_k = \frac{|\{i:y_i =k\}|}{n} \qquad k=1,2,...,K
+        \end{align*}
+    \end{itemize}
+    \item \textbf{Conditional probability}
+    \begin{align*}
+        p(t|k)=Pr[x\in R_t|x\in \pi_k] = \int_{R_t} f_k(x)dx \qquad t,k=1,2,...,K
+    \end{align*}
+    where $f_k(x)$ is the PDF of population $\pi_k$ \begin{itemize}
+        \item $\sum^K_{t=1} p(t|k)=1 \qquad (k=1,2,...,K)$\\
+        \item $Pr[x\in R_t \ \& \  x\in \pi_k] = Pr[x\in \pi_k] \times Pr[x\in R_t|x\in \pi_k] = p_k p(t|k)$\\
+        $(t,k=1,2,...,K)$\\
+        \item $\sum^K_{k=1}\sum^K_{t=1} p_k p(t|k) =1$
+    \end{itemize}
+    \item \textbf{Misclassification cost}
+    \begin{align*}
+        c(t|k)= &\text{loss caused by misclassifying an observation into $\pi_t$}\\
+        &\text{when it is actually from $\pi_k$} \quad (t,k=1,2,...,K)
+    \end{align*}
+    \begin{itemize}
+        \item In this course, unless otherwise stated, $c(1|1)=c(2|2)=\cdots =c(K|K)=0$\\
+        \item In general, $c(t|k) \neq c(k|t)$ \ \ $(t \neq k)$.\footnote{For example, misclassifying a person with a certain disease as healthy, v.s. misclassifying a healthy person as diseased}
+    \end{itemize}
+\end{itemize}
+
+\newpage
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=ECM: Expected Cost of Missclassification]
+\begin{align*}
+    ECM=\sum^K_{k=1}\sum^K_{t=1} p_k p(t|k) c(t|k)
+\end{align*}
+\footnote{Note that ECM is a \textbf{function of classification rule}. If $p_k, f_k(x), p(t|k),$ and $c(t|k)$ are all known or can be estimated (from the sample $(x_1, y_1),(x_2, y_2),...,(x_n, y_n)$), the classification rule that minimizes ECM is called the \textbf{minimum ECM classification rule}.}
+\end{tcolorbox}
+\underline{Result 8.1}\\
+Explicit solution of the minimum ECM classification rule is given by
+\begin{align*}
+    R_m = \{x: \text{arg}\min_t \sum^K_{k=1}p_k f_k(x) c(t|k) =m \} \qquad m=1,2,...,K
+\end{align*}
+That is, to classify $x$ into $\pi_m$, if $\sum^K_{k=1}p_k f_k(x) c(m|k)$ is the minimum among $\sum^K_{k=1}p_k f_k(x) c(t|k)$ for all $t=1,2,...,K$
+
+\subsection{$K=2$ multivariate normal populations}
+Now suppose $k=2$, and the 2 populations are both multivariate normal:
+\begin{align*}
+    \pi_1: N_p(\mu_1,\Sigma_1) \qquad \& \qquad \pi_2: N_p(\mu_2,\Sigma_2)
+\end{align*}
+Recall the ODF of multivariate normal distributions:
+\begin{align*}
+    f_k(x) = \frac{1}{(2\pi)^{p/2} \text{det}(\Sigma_k)^{1/2}} \text{exp}\bigg[-\frac{1}{2}(x-\mu_k)^T\Sigma^{-1}_k (x-\mu_k) \bigg]
+\end{align*}
+
+The minimum ECM classification rule can be reformulated as:
+\begin{align*}
+    R_1 &= \Bigg\{x:\frac{1}{2}\bigg( d_2(x)-d_1(x) +\text{ln}\bigg[ \frac{\text{det}(\Sigma_2)}{\text{det}(\Sigma_1)}\bigg]\bigg) \geq \text{ln}\bigg[\frac{p_2 c(1|2)}{p_1 c(2|1)}\bigg] \Bigg\} \\
+    R_2 &= \Omega \setminus R_1 \qquad \text{where $\Omega$ is the sample space}
+\end{align*}
+As for quantities used in the rule:\\
+\begin{tabular}{rl}
+$\mu_k$ $(k=1,2)$:& if not known, estimated by $\Bar{x}_k$\\
+$\Sigma_k$ $(k=1,2)$:& if not known, estimated by $S_k$\\
+$p_k$ $(k=1,2)$:& if not known, estimated by $\frac{|\{i:y_i =k\}|}{n}$\\
+$c(1|2)$ \& $c(2|1)$:& must be pre-specified
+\end{tabular}\\
+
+\newpage
+If we further have $\Sigma_1 =\Sigma_2 =\Sigma$,
+\begin{align*}
+    \text{ln}\bigg[\frac{\text{det}(\Sigma_2)}{\text{det}(\Sigma_1)}\bigg] &= \text{ln}1 = 0\\
+    d_k(x) &= (x-\mu_k)^T \Sigma^{-1} (x-\mu_k) \qquad (k=1,2)
+\end{align*}
+Thus
+\begin{align*}
+    d_{12}(x) &= \frac{1}{2}[d_2(x) -d_1(x)]\\
+    &= \frac{1}{2}[(x-\mu_2)^T \Sigma^{-1} (x-\mu_2) -(x-\mu_1)^T \Sigma^{-1} (x-\mu_1)]\\
+    &= (\mu_1 -\mu_2)^T \Sigma^{-1} x -\frac{1}{2} (\mu_1 -\mu_2)^T \Sigma^{-1} (\mu_1 +\mu_2)
+\end{align*}
+The minimum EMC classification rule can be reformulated as
+\begin{align*}
+    R_1 &= \Bigg\{x:d_{12}(x) \geq \text{ln}\bigg[\frac{p_2 c(1|2)}{p_1 c(2|1)}\bigg] \Bigg\} \\
+    R_2 &= \Omega \setminus R_1
+\end{align*}
+In the rule, $\Sigma$, if unknown, can be estimated by
+\begin{align*}
+    S_{pool} =\frac{(n_1 -1)S_1 +(n_2 -1)S_2}{n_1 +n_2 -2}
+\end{align*}
+In addition, if $p_1 =p_2$ and $c(1|2)=c(2|1)$,
+\begin{align*}
+    R_1 &= \{x:d_{12}(x) \geq 0 \} \\
+    R_2 &= \{x:d_{12}(x) < 0 \}
+\end{align*}
+
+\subsection{$K \geq 3$ multivariate normal populations}
+\begin{itemize}
+    \item If $p_1 =p_2 =\cdots =p_K$ and $c(t|k)$ is constant for all pairs $t \neq k$, to find $m$ that maximizes $f_m(x)$, is equivalent with to find $m$ that minimizes
+    \begin{align*}
+        -2\text{ln}[f_m(x)] -p\text{ln}[2\pi] = d_m(x) +\text{ln}[\text{det}(\Sigma_m)]
+    \end{align*}
+    where $d_m(x)=(x-\mu_m)^T \Sigma^{-1}_m (x-\mu_m)$
+    \item If $c(t|k)$ is constant for all pairs $t \neq k$ while $p_1,p_2,...,p_K$ are general, to find $m$ that maximizes $p_m f_m (x)$, is equivalent with to find $m$ that minimizes
+    \begin{align*}
+        -2\text{ln}[p_m f_m(x)] -p\text{ln}[2\pi] = d_m(x) + \text{ln}[\text{det}(\Sigma_m)] -2\text{ln}p_m
+    \end{align*}
+\end{itemize}
+
+\newpage
+\section{FA: Factor Analysis}
+The essential purpose of FA is to describe, if possible, the covariabce relationships among many variables in terms of a fer underlying, but \textbf{unobservable}, random quantities (latent variables) called factors.
+
+\subsection{The Orthogonal Factor Model}
+\textbf{Notations}
+\begin{align*}
+    X_1 -\mu_1 &= l_{11}F_1 +l_{12}F_2 + \dots + l_{1m}F_m + \epsilon_1\\
+    X_2 -\mu_2 &= l_{21}F_1 +l_{22}F_2 + \dots + l_{2m}F_m + \epsilon_2\\
+    &\dots \\
+    X_p -\mu_p &= l_{p1}F_1 +l_{p2}F_2 + \dots + l_{pm}F_m + \epsilon_p\\
+\end{align*}
+
+\begin{tabular}{rl}
+$X_j$:& $j$th observable random variable $(j=1,2,...,p)$\\
+$\mu_j$:& mean of $X_j$ $(j=1,2,...,p)$\\
+$F_k$:& $k$th \textbf{common factor} $(k=1,2,...,m)$\\
+$l_{jk}$:& \textbf{loading} of the $j$th variable on the $k$th (common) factor $(j=1,2,...,p$ and $k=1,2,...,m)$\\
+$\epsilon_j$:& $j$th \textbf{specific factor} or \textbf{error} $(j=1,2,...,p)$
+\end{tabular}\\
+
+\underline{\textbf{Assumptions}}
+\begin{itemize}
+    \item $\mathbb{E}[F]= \textbf{0}_{m\times 1}$ and $\text{Cov}(F)=l_m$ \\
+    \item $\mathbb{E}[\epsilon]=\textbf{0}_{p\times 1}$ and
+    \begin{align*}
+        \text{Cov}(\epsilon) =\Psi_{p\times p} = \left(\begin{array}{cccc}
+        \psi_1 & 0 & \cdots & 0 \\
+        0 & \psi_2 & \cdots & 0 \\
+        \vdots & \vdots & \ddots & \vdots \\
+        0 & 0 & \cdots & \psi_p
+        \end{array} \right) 
+    \end{align*}
+    \item $F$ and $\epsilon$ are independent, thus $\text{Cov}(F,\epsilon) =\textbf{0}_{m\times p}$
+\end{itemize}
+
+\subsection{Covariance Structure; OFM}
+\begin{align*}
+    X=\mu + LF + \epsilon
+\end{align*}
+implies
+\begin{align*}
+    (X-\mu)(X-\mu)^T &= (LF+\epsilon)(LF+\epsilon)^T\\
+    &= (LF)(LF)^T + \epsilon(LF)^T + (LF)\epsilon^T + \epsilon \epsilon^T\\
+    &= LFF^T L^T + \epsilon F^T L^T + LF\epsilon^T + \epsilon \epsilon^T
+\end{align*}
+Thus
+\begin{align*}
+    \Sigma &= E[(X-\mu)(X-\mu)^T]\\
+    &= \mathbb{E}[LFF^T L^T + \epsilon F^T L^T + LF\epsilon^T + \epsilon \epsilon^T]\\
+    &= L\mathbb{E}[FF^T]L^T + \mathbb{E}[\epsilon] \mathbb{E}[F^T] L^T + L\mathbb{E}[F]\mathbb{E}[\epsilon^T] + \mathbb{E}[\epsilon \epsilon^T]\\
+    &= L\text{Cov}(F)L^T + \textbf{0}_{p\times p} + \textbf{0}_{p\times p} + \text{Cov}(\epsilon)\\
+    &=LL^T + \Psi
+\end{align*}
+
+which implies
+\begin{align*}
+    \sigma_{jj}=l^2_{j1} +l^2_{j2} +\cdots +l^2_{jm} +\psi_j \qquad j=1,2,...,p
+\end{align*}
+
+\begin{tabular}{rl}
+    $\sigma_{jj}$:& variance of $X_j$\\
+    $h^2_j=l^2_{j1}+l^2_{j2}+\cdots+l^2_{jm}$:& $j$th \textbf{communality}\\
+    & portion of $\sigma_{jj}$ explained by the $m$ common factors \\
+    $\psi_j$:& $j$th \textbf{specific variance} or \textbf{uniqueness}\\
+    & protion of $\sigma_{jj}$ explained by $\epsilon_j$
+\end{tabular}
+$\Sigma=LL^T + \Psi$ also implies
+\begin{align*}
+    \sigma_{ij}=l_{i1}l_{j1} + l_{i2}l_{j2} + \cdots + l_{im}l_{jm}
+\end{align*}
+where $i,j=1,2,...,p$ and $i \neq j$
+
+Back to
+\begin{align*}
+    X=\mu +LF+\epsilon
+\end{align*}
+it also implies
+\begin{align*}
+    (X-\mu)F^T = (LF+\epsilon)F^T = LFF^T + \epsilon F^T
+\end{align*}
+Thus
+\begin{align*}
+    \text{Cov}(X,F) &= \mathbb{E}[(X-\mu)F^T] = \mathbb{E}[LFF^T + \epsilon F^T]\\
+    &= L\mathbb{E}[FF^T] +\mathbb{E}[\epsilon]\mathbb{E}[F^T] = L\text{Cov}(F) + \textbf{0}_{p\times m}\\
+    &= L
+\end{align*}
+i.e.
+\begin{align*}
+    \text{Cov}(X_j, F_k)=l_{jk} \qquad \text{where} \qquad j=1,2,...,p \quad \text{and} \quad k=1,2,...,m
+\end{align*}
+
+\subsection{Principal Component Method}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Principal Component Method]
+In PCA, we had
+\begin{align*}
+    \Sigma &= U\Lambda U^T = U\Lambda^{1/2}\Lambda^{1/2}U^T\\
+    &= (U\Lambda^{1/2})(U\Lambda^{1/2})^T
+\end{align*}
+In consequence, the solution to FA is given by
+\begin{align*}
+    L &= U\Lambda^{1/2}\\
+    \Psi &= \textbf{0}_{p\times p}
+\end{align*}
+\end{tcolorbox}
+This solution is feasible in theory but definitely suboptimal, since $m=p$.\\
+A strategy to address this is to use only the largest $m$ ($m<p$ or even $m<<p$) eigenvalues $\lambda_1,\lambda_2,...,\lambda_m$, and their corresponding eigenvectors $e_1,e_2,...,e_m$.
+\begin{enumerate}
+    \item Let $U_m=(e_1,e_2,...,e_m)_{p\times m}$ and $\Lambda_m=\text{diag}(\lambda_1,\lambda_2,...,\lambda_m)_{m\times m}$, then
+    \begin{align*}
+        \Tilde{L}_{p\times m} = U_m \Lambda_m^{1/2} = (\sqrt{\lambda_1}e_1,\sqrt{\lambda_2}e_2,...,\sqrt{\lambda_m}e_m)
+    \end{align*}
+    \item After $\Tilde{L}$ is determined, let
+    \begin{align*}
+        \Tilde{\Psi}= \text{diag}(\Sigma-\Tilde{L}\Tilde{L}^T)
+    \end{align*}
+    which is a diagonal matrix with the same diagonal elements as $\Sigma-\Tilde{L}\Tilde{L}^T$
+    \item At this stage, we think, more or less,
+    \begin{align*}
+        \Sigma \approx \Tilde{L}\Tilde{L}^T + \Tilde{\Psi}
+    \end{align*}
+\end{enumerate}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Principal Component Method; Residual Matrix]
+\begin{align*}
+    \Sigma - (\Tilde{L}\Tilde{L}^T + \Tilde{\Psi})
+\end{align*}
+is thus called the \textbf{residual matrix}, which has the following properties:\\
+1. Symmetric matrix.\\
+2. All diagonal elements are zero.
+\end{tcolorbox}
+
+\subsection{Covariance Structure; PCM}
+As for the (estimated) factor loading matrix
+\begin{align*}
+    \Tilde{L}= \left(\begin{array}{cccc}
+        \Tilde{l}_{11} & \Tilde{l}_{12} & \cdots & \Tilde{l}_{1m} \\
+        \Tilde{l}_{21} & \Tilde{l}_{22} & \cdots & \Tilde{l}_{2m} \\
+        \vdots & \vdots & \ddots & \vdots \\
+        \Tilde{l}_{p1} & \Tilde{l}_{p2} & \cdots & \Tilde{l}_{pm}
+        \end{array} \right)
+\end{align*}
+ - By row, we have interpreted it as\\
+ 1. Portion of $\sigma_{jj}$ explained by the $m$ common factors: $\Tilde{h}^2_j = \Tilde{l}^2_{j1}+\Tilde{l}^2_{j2}+\cdots+\Tilde{l}^2_{jm}$\\
+ 2. Portion of $\sigma_{jj}$ explained by $\epsilon_j$: $\Tilde{\psi}_j =\sigma_{jj} -\Tilde{h}^2_j$\\
+ 
+ - In addition, by column, we interpreted it as
+ \begin{align*}
+     \text{Portion of total variance explained by } F_k=\sum^p_{j=1} \Tilde{l}^2_{jk}
+ \end{align*}
+\begin{enumerate}
+    \item In consequence,
+    \begin{align*}
+        \text{Portion of total variance explained by } F_k &= \frac{\sum^p_{j=1} \Tilde{l}^2_{jk}}{\sum^p_{j=1} \sigma_{jj}}\\
+        \text{Cumulative portion of total variance} \qquad &\\
+        \text{explained by the first $k$ common factors } &= \frac{\sum^k_{i=1}\sum^p_{j=1}\Tilde{l}^2_{ji}}{\sum^p_{j=1}\sigma_{jj}}
+    \end{align*}
+    \item In principle component method of estimation for FA,
+    \begin{align*}
+        \sum^p_{j=1} \Tilde{l}^2_{jk} = (\sqrt{\lambda_k}e_k)^T (\sqrt{\lambda_k}e_k) = \lambda_k e_k^T e_k = \lambda_k
+    \end{align*}
+\end{enumerate}
+
+\subsection{The Maximum Likelihood Method}
+If $F$ and $\epsilon$ both can be assumed to be normally distributed, so is $X = \mu +LF+\epsilon$.\\
+If we have a collection of observations $x_1,x_2,...,x_n$, the likelihood function would be
+\begin{align*}
+    L(\mu,\Sigma|\{x_i\}^n_{i=1})=\frac{1}{(2\pi)^{np/2} \text{det}(\Sigma)^{n/2}}e^{-\sum^n_{i=1}(x_i -\mu)^T \Sigma^{-1}(x_i -\mu)/2}
+\end{align*}
+Substitute $\Sigma =LL^T +\Psi$ in we have
+\begin{align*}
+    L(\mu,L,\Psi|\{x_i\}^n_{i=1}) = \frac{1}{(2\pi)^{np/2} \text{det}(LL^T +\Psi)^{n/2}}e^{-\sum^n_{i=1}(x_i -\mu)^T (LL^T +\Psi)^{-1}(x_i -\mu)/2}
+\end{align*}
+Maximum likelihood solution, $\hat{L}$ and $\hat{\Psi}$, can be obtained by maximizing the likelihood function, with assistance of computers.
+
+\subsection{Test of Sufficiency; MLM}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Test of Sufficiency]
+Whenever a FA model is build using sample covariance matrix $S$, a common question of interest is whether the model constructed fits the observed data well enough. That is, we want to test the (null) hypothesis
+\begin{align*}
+    H_0: \Sigma=\hat{L}\hat{L}^T +\hat{\Psi}
+\end{align*}
+If the maximum likelihood method of estimation is employed, a testing statistic is proposed:
+\begin{align*}
+    TS = \bigg(n-1-\frac{2p+4m+5}{6}\bigg)\text{ln}\frac{\text{det}(\hat{L}\hat{L}^T +\hat{\Psi})}{\text{det}(\hat{\Sigma})}
+\end{align*}
+\end{tcolorbox}
+
+Remarks:
+\begin{enumerate}
+    \item $\hat{L}$ and $\hat{\Psi}$ are the maximum likelihood estimate of $L$ and $\Psi$ respectively
+    \item $\hat{\Sigma}$ is the maximum likelihood estimate of $\Sigma$, that is,
+    \begin{align*}
+        \hat{\Sigma}=\frac{1}{n}SSCP=\frac{n-1}{n}S
+    \end{align*}
+    \item If $n$ is large, under $H_0$, $TS$ follows a $\chi^2$ distribution with degree of freedom
+    \begin{align*}
+        d.f.=\frac{(p-m)^2}{2}-\frac{p+m}{2}
+    \end{align*}
+    To have a positive $d.f.$, it must be the case that
+    \begin{align*}
+        m<p-\frac{\sqrt{8p+1}-1}{2}
+    \end{align*}
+\end{enumerate}
+
+\newpage
+\subsection{Factor Rotation}
+In a FA model
+\begin{align*}
+    \Sigma = LL^T +\Psi
+\end{align*}
+it is noticed that, for any $m\times m$ orthogonal matrix $G$,
+\begin{align*}
+    (LG)(LG)^T =LGG^T L^T = LI_m L^T = LL^T
+\end{align*}
+That is,
+\begin{align*}
+    L^* &= LG\\
+    \Psi^* &= \Psi
+\end{align*}
+is also a feasible solution $\Sigma = L^*L^{*T} +\Psi^*$.\\
+In linear algebra, to right-multiply $G$ to $L$ can be interpreted as to \textbf{rotate} $L$.\\
+
+Since any orthogonal matrix will keep $L^*$ a feasible solution, an idea is proposed to keep rotating $L$ until a simple structure is achieved. Here by "simple", it means every factor loading $l_{jk}$ is either large or close to 0. The so-called \textbf{varimax criterion} is thus proposed:
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Varimax Criterion]
+\begin{align*}
+    V=\sum^m_{k=1}\left[\sum^p_{j=1}l^4_{jk} -\frac{1}{p}\Bigg(\sum^p_{j=1}l^2_{jk}\Bigg)^2 \right]
+\end{align*}
+Although it looks a little bit forbidding, the criterion in fact has a quite direct interpretation, since
+\begin{align*}
+    \sum^p_{j=1}l^4_{jk} -\frac{1}{p}\Bigg(\sum^p_{j=1}l^2_{jk}\Bigg)^2 = \text{variance of } \{l^2_{1k},l^2_{2k},...,l^2_{pk}\}
+\end{align*}
+Therefore, to maximize the varimax criterion, is effectively "spreading out" $l^2_{jk}$ as much as possible, so that some of them are large, while the others are close to 0.\\
+\ \\
+A weighted version of varimax criterion is defined to be
+\begin{align*}
+    V_W=\sum^m_{k=1}\left[\sum^p_{j=1}\Bigg(\frac{l^2_{jk}}{h^2_j}\Bigg) -\frac{1}{p}\Bigg(\sum^p_{j=1}\frac{l^2_{jk}}{h^2_j}\Bigg)^2 \right]
+\end{align*}
+\end{tcolorbox}
+\newpage
+What are different before and after factor rotation:
+\begin{enumerate}
+    \item The factor loadings: $l_{jk}$ ($j=1,2,...,p$ and $k=1,2,...,m$)
+    \item The variance explained by each factor: $\sum^p_{j=1} l^2_{jk}$ $(k=1,2,...,m)$
+\end{enumerate}
+While what are the same:
+\begin{enumerate}
+    \item The communalities: $h^{*2}_j =\sum^m_{k=1}l^{*2}_{jk}=(L^*L^{*T})_{jj}=(LL^T)_{jj}=h^2_j$ $(j=1,2,...,p)$
+    \item The specific variances: $\psi^*_j =1-h^{*2}_j =1-h^2_j =\psi_j$ $(j=1,2,...,p)$
+    \item The cumulative variance explained by \textbf{all} the $m$ common factors:
+    \begin{align*}
+        \sum^m_{k=1}\sum^p_{j=1}l^{*2}_{jk}
+        =\sum^p_{j=1}\sum^m_{k=1}l^{*2}_{jk}
+        =\sum^p_{j=1}h^{*2}_j
+        =\sum^p_{j=1}h^2_j
+        =\sum^m_{k=1}\sum^p_{j=1}l^{2}_{jk}
+    \end{align*}
+\end{enumerate}
+
+\subsection{Factor Scores}
+When sample FA is performed, similar to the component scores in sample PCA, every factor is supposed to have a value on every observation.\\
+However, due to different approaches of PCA and FA, the factor scores are not able to be directly calculated. Here we mention two methods of estimation:
+\begin{enumerate}
+    \item The weighted least squares method (the Bartlett method):
+    \begin{align*}
+        \hat{f}_i =(\hat{L}^T \hat{\Psi}^{-1} \hat{L})^{-1} \hat{L}^T \hat{\Psi}^{-1} (x_i -\Bar{x})
+    \end{align*}
+    where $\hat{f}_i = (\hat{f}_{i1},\hat{f}_{i2},...,\hat{f}_{im})^T$ are estimated values of $F_1,F_2,...,F_m$ on $x_i$.
+    \item The regresion method:
+    \begin{align*}
+        \hat{f}_i = \hat{L}^T S^{-1} (x_i -\Bar{x})
+    \end{align*}
+    again, $\hat{f}_i = (\hat{f}_{i1},\hat{f}_{i2},...,\hat{f}_{im})^T$ are estimated values of $F_1,F_2,...,F_m$ on $x_i$.
+\end{enumerate}
+
+\newpage
+\section{CCA: Canonical Correlation Analysis}
+CCA seeks to identify and quantify the associations between two sets of variables.
+\subsection{Population CCA}
+With the partitioned r.v., let
+\begin{align*}
+    U &= a^T X^{(1)}\\
+    V &= b^T X^{(2)}
+\end{align*}
+where $a_{p\times 1}$ and $b_{q\times 1}$ are a pair of coefficient vectors. In consequence,
+\begin{align*}
+    \text{Var}(U) &= a^T \Sigma_{11} a\\
+    \text{Var}(V) &= b^T \Sigma_{22} b\\
+    \text{Cov}(U,V) &= a^T \Sigma_{12} b = b^T \Sigma_{21} a
+\end{align*}
+and
+\begin{align*}
+    \text{Cor}(U,V) = \frac{a^T \Sigma_{12} b}{\sqrt{a^T \Sigma_{11} a}\sqrt{b^T \Sigma_{22} b}}
+\end{align*}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Result 10.1]
+\begin{itemize}
+    \item $e_1, e_2, ...,e_p$ (each with unit length) to be the eigenvectors of $p \times p$ matrix $\Sigma_{11}^{-1/2}\Sigma_{12}\Sigma_{22}^{-1}\Sigma_{21}\Sigma_{11}^{-1/2}$, with corresponding eigenvalues $\rho_1^2 \geq \rho_2^2 \geq \dots \geq \rho_p^2$
+    \item $f_1, f_2, ...,f_p$ (each with unit length) to be the \textbf{first p} ($p \leq q$) eigenvectors of $q \times q$ matrix $\Sigma_{22}^{-1/2}\Sigma_{21}\Sigma_{11}^{-1}\Sigma_{12}\Sigma_{22}^{-1/2}$, with corresponding eigenvalues $\rho_1^2 \geq \rho_2^2 \geq \dots \geq \rho_p^2$
+\end{itemize}
+Then the $k$th pair of canonical variables $(k=1,2,...,p)$ is explicitly given by
+\begin{align*}
+    U_k &= e_k^T \Sigma_{11}^{-1/2} X^{(1)}, \qquad \text{that is } \qquad a_k = \Sigma_{11}^{-1/2}e_k\\
+    V_k &= f_k^T \Sigma_{22}^{-1/2} X^{(2)}, \qquad \text{that is } \qquad b_k = \Sigma_{22}^{-1/2}f_k
+\end{align*}
+\end{tcolorbox}
+
+For $k=1,2,...,p$
+\begin{align*}
+    f_k &= \frac{1}{\rho_k}\Sigma_{22}^{-1/2}\Sigma_{21}\Sigma_{11}^{-1/2} e_k\\
+    e_k &= \frac{1}{\rho_k}\Sigma_{11}^{-1/2}\Sigma_{12}\Sigma_{22}^{-1/2} f_k
+\end{align*}
+For $k,l=1,2,...,p$ and $k\neq l$
+\begin{align*}
+    \text{Var}(U_k) &= 1, \qquad \text{Cor}(U_k,U_l)=0\\
+    \text{Var}(V_k) &= 1, \qquad \text{Cor}(V_k,V_l)=0\\
+    \text{Cor}(U_k,V_k) &= \rho_k, \qquad \text{Cor}(U_k,V_l) =0
+\end{align*}
+
+\subsection{Variation explained by canonical variables}
+Now denote
+\begin{align*}
+    A = \left(
+    \begin{array}{c}
+      a^T_1 \\
+      a^T_2 \\
+      \vdots \\
+      a^T_p
+    \end{array} \right) \qquad \text{and} \qquad 
+    U = \left(
+    \begin{array}{c}
+      U_1 \\
+      U_2 \\
+      \vdots \\
+      U_p
+    \end{array} \right)
+\end{align*}
+Then $U=AX^{(1)}$. Therefore,
+\begin{align*}
+    \text{Cov}(U,X^{(1)}) = \text{Cov}(AX^{(1)},X^{(1)}) = A \cdot \text{Cov}(X^{(1)})=A\Sigma_{11} 
+\end{align*}
+At the meantime, $X^{(1)}=A^{-1}U$, thus
+\begin{align*}
+    \text{Cov}(U,X^{(1)})=\text{Cov}(U,A^{-1}U)=\text{Cov}(U)(A^{-1})^T=(A^{-1})^T
+\end{align*}
+That is,
+\begin{align*}
+    A\Sigma_{11}=(A^{-1})^T, \qquad \text{or equivalently,} \qquad A\Sigma_{11}A^T=I_p
+\end{align*}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Variation explained by canonical variables]
+We have \footnote{The similar also applies to $X^{(2)},V,B$ and $\Sigma_{22}$. \\
+But notice that $V_{p+1},V_{p+2},...,V_q$ are not canonical variables.}
+\begin{align*}
+    \text{Total variation in }X^{(1)} &= \sum^p_{j=1}\sigma_{jj}\\
+    \text{Portion of variation in $X^{(1)}$ explained by }U_k &= \sum^p_{j=1}\text{Cov}(U_k,X_j^{(1)})
+\end{align*}
+where $k=1,2,...,p$.\\
+$\text{Cov}(U_k,X_j^{(1)})$ is given by the $kj$-th element of matrix $A\Sigma_{11} = (A^{-1})^T$.
+\end{tcolorbox}
+
+\subsection{Sample CCA}
+Can be obtain by replacing $\Sigma \rightarrow S$.\\
+
+In addition, every sample canonical variable has an observed value on each of the observations:
+\begin{align*}
+    U_{ik} &= a_k^T x_i^{(1)} = e_k^T S_{11}^{-1/2} x_i^{(1)}\\
+    V_{ik} &= b_k^T x_i^{(2)} = f_k^T S_{22}^{-1/2} x_i^{(2)}
+\end{align*}
+where $i=1,2,...,n$ and $k=1,2,...,p$.\\
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Test for $\Sigma_{12}$]
+\begin{align*}
+    H_0: \Sigma_{12} = \textbf{0}_{p\times q}
+\end{align*}
+If we can assume that $X$ follows the multivariate normal distribution $N_{p+q}(\mu,\Sigma)$, and the sample size $n$ is large, a testing statistic is proposed
+\begin{align*}
+    TS&=-\bigg(n-1-\frac{1}{2}(p+q+1) \bigg)\text{ln}\prod^p_{k=1}(1-\rho_k^2)\\
+    &\sim \chi^2(pq)
+\end{align*}
+where $\rho_k$ $(k=1,2,...,p)$ are the canonical correlations obtained from sample CCA.
+\end{tcolorbox}
+
+\subsection{Sample CCA - Standardized variables}
+Sample CCA performed on original variables and sample CCA performed on standardized variables are relates in a simple manner:
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Result 10.3]
+\begin{itemize}
+    \item The canonical correlations are the same up to a change of sign:
+    \begin{align*}
+        \rho^2_k = (\rho^Z_k)^2 \qquad (k=1,2,...,p)
+    \end{align*}
+    \item If $\Bar{x}_j^{(1)}=0$ (for all $j=1,2,...,p$) and $\Bar{x}_j^{(2)}=0$ (for all $j=1,2,...,q$)\footnote{Or equivalently "both set of variables have mean 0".}, then the canonical variables are the same:
+    \begin{align*}
+        U_k =U_k^Z \qquad \text{and} \qquad V_k = V_k^Z \qquad (k=1,2,...,p)
+    \end{align*}
+    \item Denote
+    \begin{align*}
+        \text{diag}(S)=D= \left(\begin{array}{cc}
+        D_1 & \textbf{0} \\
+        \textbf{0} & D_2
+        \end{array} \right)
+    \end{align*}
+    Then
+    \begin{align*}
+        a_k^Z = D_1^{1/2}a_k \qquad \text{and} \qquad b_k^Z = D_2^{1/2}b_k \qquad (k=1,2,...,p)
+    \end{align*}
+\end{itemize}
+\end{tcolorbox}
+
+
+\end{document}
