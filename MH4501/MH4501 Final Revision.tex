@@ -106,7 +106,7 @@ the first $k$ principal components:& $\frac{\sum^k_{j=1}\lambda_j}{\sum^p_{j=1}\
 \end{tabular}
 \end{tcolorbox}
 
-\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Correlation (Result 6.3)]
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Correlation with the original variable (Result 6.3)]
 \begin{align*}
     \text{Cor}(Y_k, X_j) =\frac{e_{kj}\sqrt{\lambda_k}}{\sqrt{\sigma_{jj}}} \qquad k,j=1,2,...,p
 \end{align*}
@@ -150,7 +150,7 @@ and
 \newpage
 \section{CA: Cluster Analysis}
 \subsection{Distance}
-\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Distance]
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Distance (No need to memorize)]
 \renewcommand{\arraystretch}{2}
 \begin{tabular}{rl}
 Minkowski distance:& $d(x,y)=\Big[ \sum^p_{j=1} |x_j -y_j|^m \Big]^\frac{1}{m}$\\
@@ -183,12 +183,12 @@ If any reassignment happens, go back to Step 2; Otherwise, the algorithm is comp
 \textbf{Motivation}
 \begin{enumerate}
     \item One major drawback of K-means clustering is that the desired number of clusters must be pre-specified, which is not always feasible.
-    \item Hierarchical clustering instead provides a whole "path", from one extreme situation, namely that each individual observation constitutes a cluster, to the other extreme situation, namely that all observations are in one single cluster. Thus, one is able to review the whole path before specifying $K$.
+    \item Hierarchical clustering instead provides a whole "path", from one extreme situation, namely that each individual observation constitutes a cluster, to the other extreme situation, namely that all observations are in one single cluster. Thus, one is able to review the whole path \underline{before specifying $K$}.
     \item There are different algorithms to implement hierarchical clustering, while in this course we only discuss the \textbf{agglomerative hierarchical clustering}, which involves merging small clusters which are similar (in some sence) into larger ones.
     \item Therefore, besides a measure of distance between two observations, we also need a measure of distance between two clusters, which is conventionally called a \textbf{linkage} function.
 \end{enumerate}
 
-\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Linkage functions]
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Linkage functions (No need to memorize)]
 \renewcommand{\arraystretch}{2}
 \begin{tabular}{rl}
 Single linkage:& $\min_{x\in A, y\in B} d(x,y)$\\
@@ -264,16 +264,19 @@ Now suppose $k=2$, and the 2 populations are both multivariate normal:
 \begin{align*}
     \pi_1: N_p(\mu_1,\Sigma_1) \qquad \& \qquad \pi_2: N_p(\mu_2,\Sigma_2)
 \end{align*}
-Recall the ODF of multivariate normal distributions:
+Recall the PDF of multivariate normal distributions:
 \begin{align*}
     f_k(x) = \frac{1}{(2\pi)^{p/2} \text{det}(\Sigma_k)^{1/2}} \text{exp}\bigg[-\frac{1}{2}(x-\mu_k)^T\Sigma^{-1}_k (x-\mu_k) \bigg]
 \end{align*}
 
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Minimum ECM when K equal 2 MVN]
 The minimum ECM classification rule can be reformulated as:
 \begin{align*}
     R_1 &= \Bigg\{x:\frac{1}{2}\bigg( d_2(x)-d_1(x) +\text{ln}\bigg[ \frac{\text{det}(\Sigma_2)}{\text{det}(\Sigma_1)}\bigg]\bigg) \geq \text{ln}\bigg[\frac{p_2 c(1|2)}{p_1 c(2|1)}\bigg] \Bigg\} \\
     R_2 &= \Omega \setminus R_1 \qquad \text{where $\Omega$ is the sample space}
 \end{align*}
+\end{tcolorbox}
+
 As for quantities used in the rule:\\
 \begin{tabular}{rl}
 $\mu_k$ $(k=1,2)$:& if not known, estimated by $\Bar{x}_k$\\
@@ -327,7 +330,7 @@ In addition, if $p_1 =p_2$ and $c(1|2)=c(2|1)$,
 The essential purpose of FA is to describe, if possible, the covariabce relationships among many variables in terms of a fer underlying, but \textbf{unobservable}, random quantities (latent variables) called factors.
 
 \subsection{The Orthogonal Factor Model}
-\textbf{Notations}
+\underline{\textbf{Notations}}
 \begin{align*}
     X_1 -\mu_1 &= l_{11}F_1 +l_{12}F_2 + \dots + l_{1m}F_m + \epsilon_1\\
     X_2 -\mu_2 &= l_{21}F_1 +l_{22}F_2 + \dots + l_{2m}F_m + \epsilon_2\\
@@ -342,7 +345,7 @@ $F_k$:& $k$th \textbf{common factor} $(k=1,2,...,m)$\\
 $l_{jk}$:& \textbf{loading} of the $j$th variable on the $k$th (common) factor $(j=1,2,...,p$ and $k=1,2,...,m)$\\
 $\epsilon_j$:& $j$th \textbf{specific factor} or \textbf{error} $(j=1,2,...,p)$
 \end{tabular}\\
-
+\ \\
 \underline{\textbf{Assumptions}}
 \begin{itemize}
     \item $\mathbb{E}[F]= \textbf{0}_{m\times 1}$ and $\text{Cov}(F)=l_m$ \\
@@ -497,7 +500,7 @@ Substitute $\Sigma =LL^T +\Psi$ in we have
 \end{align*}
 Maximum likelihood solution, $\hat{L}$ and $\hat{\Psi}$, can be obtained by maximizing the likelihood function, with assistance of computers.
 
-\subsection{Test of Sufficiency; MLM}
+\subsection{Test of Sufficiency; MLM (No need to memorize)}
 \begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Test of Sufficiency]
 Whenever a FA model is build using sample covariance matrix $S$, a common question of interest is whether the model constructed fits the observed data well enough. That is, we want to test the (null) hypothesis
 \begin{align*}
@@ -509,7 +512,7 @@ If the maximum likelihood method of estimation is employed, a testing statistic 
 \end{align*}
 \end{tcolorbox}
 
-Remarks:
+Remarks (No need to memorize):
 \begin{enumerate}
     \item $\hat{L}$ and $\hat{\Psi}$ are the maximum likelihood estimate of $L$ and $\Psi$ respectively
     \item $\hat{\Sigma}$ is the maximum likelihood estimate of $\Sigma$, that is,
@@ -545,7 +548,8 @@ is also a feasible solution $\Sigma = L^*L^{*T} +\Psi^*$.\\
 In linear algebra, to right-multiply $G$ to $L$ can be interpreted as to \textbf{rotate} $L$.\\
 
 Since any orthogonal matrix will keep $L^*$ a feasible solution, an idea is proposed to keep rotating $L$ until a simple structure is achieved. Here by "simple", it means every factor loading $l_{jk}$ is either large or close to 0. The so-called \textbf{varimax criterion} is thus proposed:
-\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Varimax Criterion]
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Varimax Criterion (No need to memorize)]
 \begin{align*}
     V=\sum^m_{k=1}\left[\sum^p_{j=1}l^4_{jk} -\frac{1}{p}\Bigg(\sum^p_{j=1}l^2_{jk}\Bigg)^2 \right]
 \end{align*}
@@ -597,7 +601,9 @@ However, due to different approaches of PCA and FA, the factor scores are not ab
 \end{enumerate}
 
 \newpage
-\section{CCA: Canonical Correlation Analysis}
+\section{CCA: Canonical Correlation Analysis\\
+\underline{(For the final, only expected to conduct CCA}\\
+\ \ \underline{as we did in Example 10.1)}}
 CCA seeks to identify and quantify the associations between two sets of variables.
 \subsection{Population CCA}
 With the partitioned r.v., let
@@ -692,7 +698,7 @@ In addition, every sample canonical variable has an observed value on each of th
 \end{align*}
 where $i=1,2,...,n$ and $k=1,2,...,p$.\\
 
-\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Test for $\Sigma_{12}$]
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Test for $\Sigma_{12}$ (Not required)]
 \begin{align*}
     H_0: \Sigma_{12} = \textbf{0}_{p\times q}
 \end{align*}
@@ -704,8 +710,10 @@ If we can assume that $X$ follows the multivariate normal distribution $N_{p+q}(
 where $\rho_k$ $(k=1,2,...,p)$ are the canonical correlations obtained from sample CCA.
 \end{tcolorbox}
 
+\newpage
 \subsection{Sample CCA - Standardized variables}
 Sample CCA performed on original variables and sample CCA performed on standardized variables are relates in a simple manner:
+
 \begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Result 10.3]
 \begin{itemize}
     \item The canonical correlations are the same up to a change of sign:
@@ -729,6 +737,247 @@ Sample CCA performed on original variables and sample CCA performed on standardi
     \end{align*}
 \end{itemize}
 \end{tcolorbox}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Example 10.1]
+Observations are collected on $p=2$ population variables and $q=3$ economic variables for each of $n=50$ countries:
+\begin{align*}
+    X_1^{(1)} &= \text{Percentage of population over 75 years old}\\
+    X_2^{(1)} &= \text{Percentage of population under 15 years old}\\
+    X_1^{(2)} &= \text{Aggregate personal saving}\\
+    X_2^{(2)} &= \text{Per capita disposable income}\\
+    X_3^{(2)} &= \text{Percentage growth rate of disposable income}
+\end{align*}
+The sample correlation is found to be
+\begin{align*}
+    R = \left(\begin{array}{cc|ccc}
+        1 & -0.91 & -0.46 & -0.76 & -0.05 \\
+        -0.91 & 1 & 0.32 & 0.79 & 0.03 \\ \hline
+        -0.46 & 0.32 & 1 & 0.22 & 0.30 \\
+        -0.76 & 0.79 & 0.22 & 1 & -0.13 \\
+        -0.05 & 0.03 & 0.30 & -0.13 & 1
+        \end{array} \right) = \left(\begin{array}{cc}
+        R_{11} & R_{12} \\
+        R_{21} & R_{22}
+        \end{array} \right)
+\end{align*}
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Example 10.1 (Cont.)]
+Eigenvalues and eigenvectors of $R_{11}^{-1/2}R_{12}R_{22}^{-1}R_{21}R_{11}^{-1/2}$ are
+\begin{align*}
+    \left(\begin{array}{c}
+        \rho_1^2 \\
+        \rho_2^2 
+        \end{array} \right) = \left(\begin{array}{c}
+        0.6877 \\
+        0.1374 
+        \end{array} \right), \qquad e_1^Z = \left(\begin{array}{c}
+        0.7314 \\
+        -0.6819 
+        \end{array} \right),
+        \qquad e_2^Z = \left(\begin{array}{c}
+        0.6819 \\
+        0.7314 
+        \end{array} \right)
+\end{align*}
+Thus
+\begin{align*}
+    U_1 &= (e_1^Z)^T R_{11}^{-1/2}Z^{(1)} = 0.5939Z_1^{(1)} - 0.4288Z_2^{(1)}\\
+    U_2 &= (e_2^Z)^T R_{11}^{-1/2}Z^{(1)} = 2.3377Z_1^{(1)} + 2.3735Z_2^{(1)}
+\end{align*}
+
+Eigenvalues and eigenvectors of $R_{22}^{-1/2}R_{21}R_{11}^{-1}R_{12}R_{22}^{-1/2}$ are
+\begin{align*}
+    \left(\begin{array}{c}
+        \rho_1^2 \\
+        \rho_2^2 \\
+        \rho_3^2
+        \end{array} \right) &= \left(\begin{array}{c}
+        0.6877 \\
+        0.1374 \\
+        0
+        \end{array} \right), \\
+        f_1^Z = \left(\begin{array}{c}
+        0.3844 \\
+        0.9211 \\
+        0.0611
+        \end{array} \right), \qquad
+        f_2^Z &= \left(\begin{array}{c}
+        0.9299 \\
+        -0.3817 \\
+        -0.0513
+        \end{array} \right), \qquad
+        f_3^Z = \left(\begin{array}{c}
+        0.0239 \\
+        -0.0761 \\
+        0.9968
+        \end{array} \right)
+\end{align*}
+Thus
+\begin{align*}
+    V_1 &= (f_1^Z)^T R_{22}^{-1/2}Z^{(2)} = 0.2694Z_1^{(2)} +0.9049Z_2^{(2)} +0.0882Z_3^{(2)}\\
+    V_2 &= (f_2^Z)^T R_{22}^{-1/2}Z^{(2)} = 1.0463Z_1^{(2)} - 0.5295Z_2^{(2)} -0.2595Z_3^{(2)}
+\end{align*}
+
+\underline{\textbf{Conclusion}}
+\begin{enumerate}
+    \item $U_1 = 0.5939Z_1^{(1)} -0.4288Z_2^{(1)}$, a greater value of $U_1$ corresponds to a more aging population.
+    \item $V_1 = 0.2694Z_1^{(2)} +0.9049Z_2^{(2)} +0.0882Z_3^{(2)}$, a greater valur of $V_1$ mostly corresponds to greater per capita disposable income.
+    \item $\rho^Z_1 = -0.8293$ is indicating a strong negative correlation between $U_1$ and $V_1$
+\end{enumerate}
+\end{tcolorbox}
+
+
+\section{Supplementary Topics}
+\subsection{Matrix Partitioning (might be used, but not solely tested about this)}
+No content to review, it's too basic.
+
+\newpage
+\subsection{Simultaneous CI Revisited (Required)}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Generalization of SCIs]
+Let $\theta$ denote any one of the parameters for which the SCIs are to be constructed. Then the common structure of SCIs could be expressed as:
+\begin{align*}
+    \Hat{\theta} \pm t_{\alpha^* /2}[\text{d.f.}]\sqrt{\Hat{\text{Var}}(\hat{\theta})}
+\end{align*}
+\begin{itemize}
+    \item $\Hat{\theta}$ is the point estimate of $\theta$, and $\Hat{\text{Var}}(\hat{\theta})$ is the estimate of Var$(\hat{\theta})$
+    \item $\alpha^* = \alpha/$(number of SCIs), where $\alpha$ is the esired significance level
+    \item d.f. is the corresponding degree of freedom, which depends on the specific situation, and is usually highly related to the sample size(s) (when the sample size is large enough, $t_{\alpha^* /2}[\text{d.f.}]$ is replaced by $z_{\alpha^* /2}$)
+\end{itemize}
+\underline{\textbf{Examples}}\\
+\begin{enumerate}
+    \item For one-sample inference, $\theta = \mu_j$ ($j=1,2,...,p$):
+    \begin{align*}
+        \Bar{x}_j \pm t_{\alpha^* /2}[n-1]\sqrt{\frac{s_{jj}}{n}}
+    \end{align*}
+    \item For paired two-sample comparison, $\theta = \mu_{d,j}$ ($j=1,2,...,p$):
+    \begin{align*}
+        \Bar{d}_j \pm t_{\alpha^* /2}[n-1]\sqrt{\frac{s_{d,jj}}{n}}
+    \end{align*}
+    \item For unpaired two-sample comparison with assumption of equal population covariance matrix, $\theta =\delta_j =\mu_{1,j}-\mu_{2,j}$ ($j=1,2,...,p$):
+    \begin{align*}
+        (\Bar{x}_1 -\Bar{x}_2)_j \pm t_{\alpha^* /2}[n_1 +n_2 -2]\sqrt{\left(\frac{1}{n_1}+ \frac{1}{n_2}\right)s_{pool,jj}}
+    \end{align*}
+    \item For unpaired two-sample comparison with assumption of large sample size, $\theta =\delta_j =\mu_{1,j}-\mu_{2,j}$ ($j=1,2,...,p$):
+    \begin{align*}
+        (\Bar{x}_1 -\Bar{x}_2)_j \pm z_{\alpha^* /2} \sqrt{\left(\frac{s_{1,jj}}{n_1}+ \frac{s_{2,jj}}{n_2}\right)}
+    \end{align*}
+\end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=SCIs for treatment effects in MANOVA]
+In MANOVA, if the null hypothesis of equal treatment effect $H_0: \tau_1 =\tau_2 = \cdots =\tau_G$ is rejected, it is natural to ask about how $\tau_1,\tau_2,...,\tau_G$ are different in details. In fact, we are able to construct SCIs for
+\begin{align*}
+    \delta_j^{(gh)} = (\tau_g -\tau_h)_j
+\end{align*}
+where $g,h=1,2,...,G$ with $g>h$ (no need to consider $\tau_g -\tau_h$ and $\tau_h -\tau_g$ simultaneously) and $j=1,2,...,p$
+\begin{itemize}
+    \item $\Hat{\delta}_j^{(gh)} =(\Hat{x}_g -\Hat{x}_h)_j$
+    \item $\text{Var}(\Hat{\delta}_j^{(gh)}) =\text{Var}((\Hat{x}_g -\Hat{x}_h)_j) = \left(\frac{1}{n_g} +\frac{1}{n_h}\right)\sigma_{jj}$, thus\\
+    $\Hat{\text{Var}}(\Hat{\delta}_j^{(gh)}) = \left(\frac{1}{n_g} +\frac{1}{n_h}\right)s_{pool,jj} = \left(\frac{1}{n_g} +\frac{1}{n_h}\right)\frac{w_{jj}}{n-G}$\\
+    where $w_{jj}$ is the $j$th diagonal element of treatment SSCP matrix $W$,\\
+    and $n=\sum^G_{g=1}n_g$
+    \item Number of SCIs $=pG(G-1)/2$, thus $\alpha^* =\frac{2\alpha}{pG(G-1)}$
+    \item d.f. $=\sum^G_{g=1}(n_g -1) =n-G$
+\end{itemize}
+To sum up, the SCIs are
+\begin{align*}
+    (\Bar{x}_g -\Bar{x}_h)_j \pm t_{\alpha^* /2}[n-G]\sqrt{\left(\frac{1}{n_g}+ \frac{1}{n_h}\right)\frac{w_{jj}}{n-G}}
+\end{align*}
+\end{tcolorbox}
+
+\newpage
+\subsection{Fisher's Discrimination Method (two population)}
+Consider a classification problem with two populations. Suppose $x_{11},x_{12},...,x_{1n}$ are sampled from $\pi_1$, and $x_{21},x_{22},...,x_{2n}$ are sampled from $\pi_2$.\\
+The key idea of Fisher's DA is to find a proper linear combination of $X$, $Z=a^T X$, so that a classification rule can be easily constructed by employing a cut-off to the linear combination. That is,
+\begin{align*}
+    R_1 &= \{x: a^T x \geq c \}\\
+    R_2 &= \{x: a^T x < c \}
+\end{align*}
+Therefore, Fisher's DA mostly focused on the determination of vector $a$ and cut-off $c$\\
+To determine $c$, a reasonable and convenient solution is that
+\begin{align*}
+    c = a^T \left( \frac{\Bar{x}_1 +\Bar{x}_2}{2}\right)
+\end{align*}
+because $(\Bar{x}_1 +\Bar{x}_2)/2$ is seen to be in the middle between the two sets of observations, $\{x_{11},x_{12},...,x_{1n_1}\}$ and $\{x_{21},x_{22},...,x_{2n_2}\}$. This is equivalent to
+\begin{align*}
+    c = \frac{\Bar{z}_1 +\Bar{z}_2}{2}
+\end{align*}
+since $\Bar{z}_1 =a^T \Bar{x}_1$ and $\Bar{z}_2 =a^T \Bar{x}_2$\\
+\ \\
+Now it remains to solve $a$. The criterion Fisher proposed is to maximize the separation between the two sets of transformed observations:
+\begin{align*}
+    z_{11} = a^T x_{11}, \quad z_{12} = a^T x_{12}, \quad \cdots \quad z_{1n_1} = a^T x_{1n_1}
+\end{align*}
+and
+\begin{align*}
+    z_{21} = a^T x_{21}, \quad z_{22} = a^T x_{22}, \quad \cdots \quad z_{2n_2} = a^T x_{2n_2}
+\end{align*}
+When it is assumed that $\pi_1$ and $\pi_2$ share a same population covariance matrix, the separation is quantified by:
+\begin{align*}
+    \frac{(\Bar{z}_1 -\Bar{z}_2)^2}{s_{pool,z}}
+\end{align*}
+\begin{itemize}
+    \item The above criterion is interpreted as squared distance between sample means of $z$ relative to (pooled) sample variance of $z$
+    \item $s_{pool,z} =\frac{(n_1 -1)s_{z,1} +(n_2 -1)s_{z,2}}{n_1 +n_2 -2}$, where
+    \begin{align*}
+        s_{z,1} =\frac{1}{n_1 -1}\sum^{n_1}_{i=1}(z_{1i}-\Bar{z}_1)^2 \quad \text{and} \quad s_{z,2} =\frac{1}{n_2 -1}\sum^{n_2}_{i=1}(z_{2i}-\Bar{z}_2)^2
+    \end{align*}
+    It can be easily seen that $s_{pool,z} =a^T S_{pool,z} a$
+\end{itemize}
+
+The solution of $a$ that maximizes the separation can be proved to be:
+\begin{align*}
+    a = S^{-1}_{pool,x}(\Bar{x}_1 -\Bar{x}_2)
+\end{align*}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Fisher's DA method]
+In consequence,
+\begin{align*}
+    R_1 &= \bigg\{x: (\Bar{x}_1 -\Bar{x}_2)^T S^{-1}_{pool,x} x \geq (\Bar{x}_1 -\Bar{x}_2)^T S^{-1}_{pool,x} \bigg(\frac{\Bar{x}_1 +\Bar{x}_2}{2}\bigg) \bigg\}\\
+    R_2 &= \Omega \setminus R_1
+\end{align*}
+This coincides with the minimum ECM classification rule with assumptions on multivariate normality, as well as equal prior probabilities ($p_1 = p_2$) and equal misclassification costs ($c(1|2) =c(2|1)$).\\
+\end{tcolorbox}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \end{document}
