@@ -269,10 +269,10 @@ Recall the PDF of multivariate normal distributions:
     f_k(x) = \frac{1}{(2\pi)^{p/2} \text{det}(\Sigma_k)^{1/2}} \text{exp}\bigg[-\frac{1}{2}(x-\mu_k)^T\Sigma^{-1}_k (x-\mu_k) \bigg]
 \end{align*}
 
-\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Minimum ECM when K equal 2 MVN]
-The minimum ECM classification rule can be reformulated as:
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Minimum ECM when K is 2; MVN]
+The minimum ECM classification rule can be reformulated as:\footnote{LHS $= (1/2) \times (d_2(x)-d_1(x) +\text{ln}[\text{det}(\Sigma_2)/ \text{det}(\Sigma_1)]) = \text{ln}[f_1(x)/f_2(x)]$}
 \begin{align*}
-    R_1 &= \Bigg\{x:\frac{1}{2}\bigg( d_2(x)-d_1(x) +\text{ln}\bigg[ \frac{\text{det}(\Sigma_2)}{\text{det}(\Sigma_1)}\bigg]\bigg) \geq \text{ln}\bigg[\frac{p_2 c(1|2)}{p_1 c(2|1)}\bigg] \Bigg\} \\
+    R_1 &= \Bigg\{x:\frac{1}{2}\bigg( d_2(x)-d_1(x) +\text{ln}\bigg[ \frac{\text{det}(\Sigma_2)}{\text{det}(\Sigma_1)}\bigg]\bigg) \geq \text{ln}\bigg[\frac{p_2 c(1|2)}{p_1 c(2|1)}\bigg] \Bigg\}  \\
     R_2 &= \Omega \setminus R_1 \qquad \text{where $\Omega$ is the sample space}
 \end{align*}
 \end{tcolorbox}
@@ -295,21 +295,21 @@ Thus
 \begin{align*}
     d_{12}(x) &= \frac{1}{2}[d_2(x) -d_1(x)]\\
     &= \frac{1}{2}[(x-\mu_2)^T \Sigma^{-1} (x-\mu_2) -(x-\mu_1)^T \Sigma^{-1} (x-\mu_1)]\\
-    &= (\mu_1 -\mu_2)^T \Sigma^{-1} x -\frac{1}{2} (\mu_1 -\mu_2)^T \Sigma^{-1} (\mu_1 +\mu_2)
+    &= (\mu_1 -\mu_2)^T \Sigma^{-1} x -\frac{1}{2} (\mu_1 -\mu_2)^T \Sigma^{-1} (\mu_1 +\mu_2) \\
+    &= (\mu_1 -\mu_2)^T \Sigma^{-1} ( x - \frac{1}{2} (\mu_1 +\mu_2))
 \end{align*}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Minimum ECM when K is 2; MVN with same covariance matrix]
 The minimum EMC classification rule can be reformulated as
 \begin{align*}
     R_1 &= \Bigg\{x:d_{12}(x) \geq \text{ln}\bigg[\frac{p_2 c(1|2)}{p_1 c(2|1)}\bigg] \Bigg\} \\
     R_2 &= \Omega \setminus R_1
 \end{align*}
+\end{tcolorbox}
+
 In the rule, $\Sigma$, if unknown, can be estimated by
 \begin{align*}
     S_{pool} =\frac{(n_1 -1)S_1 +(n_2 -1)S_2}{n_1 +n_2 -2}
-\end{align*}
-In addition, if $p_1 =p_2$ and $c(1|2)=c(2|1)$,
-\begin{align*}
-    R_1 &= \{x:d_{12}(x) \geq 0 \} \\
-    R_2 &= \{x:d_{12}(x) < 0 \}
 \end{align*}
 
 \subsection{$K \geq 3$ multivariate normal populations}
@@ -565,6 +565,7 @@ A weighted version of varimax criterion is defined to be
 \end{align*}
 \end{tcolorbox}
 \newpage
+\ \\
 What are different before and after factor rotation:
 \begin{enumerate}
     \item The factor loadings: $l_{jk}$ ($j=1,2,...,p$ and $k=1,2,...,m$)
@@ -587,18 +588,20 @@ While what are the same:
 \subsection{Factor Scores}
 When sample FA is performed, similar to the component scores in sample PCA, every factor is supposed to have a value on every observation.\\
 However, due to different approaches of PCA and FA, the factor scores are not able to be directly calculated. Here we mention two methods of estimation:
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Methods of Factor Scoring]
 \begin{enumerate}
-    \item The weighted least squares method (the Bartlett method):
+    \item \underline{\textbf{The Bartlett method}} (the weighted least squares method):
     \begin{align*}
         \hat{f}_i =(\hat{L}^T \hat{\Psi}^{-1} \hat{L})^{-1} \hat{L}^T \hat{\Psi}^{-1} (x_i -\Bar{x})
     \end{align*}
-    where $\hat{f}_i = (\hat{f}_{i1},\hat{f}_{i2},...,\hat{f}_{im})^T$ are estimated values of $F_1,F_2,...,F_m$ on $x_i$.
-    \item The regresion method:
+    \item \underline{\textbf{The regression method}}:
     \begin{align*}
         \hat{f}_i = \hat{L}^T S^{-1} (x_i -\Bar{x})
     \end{align*}
-    again, $\hat{f}_i = (\hat{f}_{i1},\hat{f}_{i2},...,\hat{f}_{im})^T$ are estimated values of $F_1,F_2,...,F_m$ on $x_i$.
+    where $\hat{f}_i = (\hat{f}_{i1},\hat{f}_{i2},...,\hat{f}_{im})^T$ are estimated values of $F_1,F_2,...,F_m$ on $x_i$.
 \end{enumerate}
+\end{tcolorbox}
 
 \newpage
 \section{CCA: Canonical Correlation Analysis\\
