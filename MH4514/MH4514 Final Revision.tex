@@ -1,0 +1,299 @@
+\documentclass[12pt]{extarticle}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins} %preamble
+\usepackage{tabularx}
+%Some packages I commonly use.
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{enumerate}
+\usepackage{mathtools}
+\usepackage[utf8]{inputenc}
+\usepackage[top=1 in,bottom=1in, left=1 in, right=1 in]{geometry}
+
+%A bunch of definitions that make my life easier
+\newcommand{\matlab}{{\sc Matlab} }
+\newcommand{\cvec}[1]{{\mathbf #1}}
+\newcommand{\rvec}[1]{\vec{\mathbf #1}}
+\newcommand{\ihat}{\hat{\textbf{\i}}}
+\newcommand{\jhat}{\hat{\textbf{\j}}}
+\newcommand{\khat}{\hat{\textbf{k}}}
+\newcommand{\minor}{{\rm minor}}
+\newcommand{\trace}{{\rm trace}}
+\newcommand{\spn}{{\rm Span}}
+\newcommand{\rem}{{\rm rem}}
+\newcommand{\ran}{{\rm range}}
+\newcommand{\range}{{\rm range}}
+\newcommand{\mdiv}{{\rm div}}
+\newcommand{\proj}{{\rm proj}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\<}{\langle}
+\renewcommand{\>}{\rangle}
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\attn}[1]{\textbf{#1}}
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem*{definition}{Definition}
+\newtheorem*{example}{Example}
+\newtheorem*{note}{Note}
+\newtheorem{exercise}{Exercise}
+\newcommand{\bproof}{\bigskip {\bf Proof. }}
+\newcommand{\eproof}{\hfill\qedsymbol}
+\newcommand{\Disp}{\displaystyle}
+\newcommand{\qe}{\hfill\(\bigtriangledown\)}
+\setlength{\columnseprule}{1 pt}
+
+\title{\textbf{MH4514 Financial Mathematics}\\
+\Large - Final Revision -}
+\author{Naoki Honda}
+\date{May 2019}
+
+\begin{document}
+
+\maketitle
+\section{Brownian Motion and Stochastic Calculus}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Definition 5.1]
+The standard Brownian motion is a stochastic process $(B_t)_{t \in \mathbb{R}_+}$ such that
+\begin{enumerate}
+    \item $B_0 = 0$ almost surely,
+    \item The sample trajectories $t \longrightarrow B_t$ are continuous, with probability 1.
+    \item For any finite sequence of times $t_0 < t_1 < \cdots < t_n$, the increments
+    \begin{align*}
+        B_{t_1} - B_{t_0}, B_{t_2} - B_{t_1}, \cdots, B_{t_n} - B_{t_{n-1}}
+    \end{align*}
+    are mutually independent random variables.
+    \item For any given times $0 \geq s < t$, $B_t -B_s$ has the Gaussian distribution $\mathcal{N}(0,t-s)$.
+\end{enumerate}
+\end{tcolorbox}
+
+\newpage
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Lemma 5.3]
+The stochastic integral $\int^T_0 f(t)dB_t$ has the centered Gaussian distribution
+\begin{align*}
+    \int^T_0 f(t)dB_t \simeq \mathcal{N}\bigg( 0, \int^T_0 |f(t)|^2 dt \bigg)
+\end{align*}
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Stochastic Calculus]
+\begin{align*}
+    df(t,X_t) = \frac{\partial f}{\partial t}(t,X_t)dt + \frac{\partial f}{\partial x}(t,X_t)dX_t + \frac{1}{2}\frac{\partial^2 f}{\partial x^2}(t,X_t)(dX_t)^2
+\end{align*}
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Proposition 5.12]
+Given the stochastic differential equation
+\begin{align*}
+    dS_t = \mu S_t dt +\sigma S_t dB_t
+\end{align*}
+The solution is given by
+\begin{align*}
+    S_t = S_0 \text{ exp}\bigg\{\bigg(\mu - \frac{\sigma^2}{2} \bigg) t + \sigma B_t \bigg\}
+\end{align*}
+\end{tcolorbox}
+
+\newpage
+\section{The Black-Scholes PDE}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Proposition 6.1]
+A portfolio allocation $(\xi_t, \eta_t)_{t\in \mathbb{R}_+}$ with price
+\begin{align*}
+    V_t = \eta_t A_t + \xi_t S_t
+\end{align*}
+is self-financing if and only if the relation
+\begin{align*}
+    dV_t = \eta_t dA_t + \xi_t dS_t
+\end{align*}
+holds.
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Definition 6.4]
+A probability measure $\mathbb{P}^*$ on $\Omega$ is called a risk-neutral measure if it satisfies
+\begin{align*}
+    \mathbb{E}^*[S_t|\mathcal{F}_u] = e^{(t-u)r}S_u, \qquad 0\leq u \leq t,
+\end{align*}
+where $\mathbb{E}^*$ denotes the expectation under $\mathbb{P}^*$.
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Proposition 6.13]
+The arbitrage price $\pi_t (C)$ at time $t \in [0,T]$ of the option with payoff $C=h(S_T)$ is given by $\pi_t (C) = g(t,S_t)$, where the function $g(t,x)$ is solution of the following Black Scholes PDE:
+\begin{align*}
+    \begin{dcases}
+    rg(t,x) = \frac{\partial g}{\partial t}(t,x) + rx\frac{\partial g}{\partial x}(t,x) + \frac{1}{2}\sigma^2 x^2 \frac{\partial^2 g}{\partial x^2}(t,x),\\
+    g(T,x)=h(x), \qquad x>0.
+    \end{dcases}
+\end{align*}
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Proposition 6.17]
+When $h(x)=(x-K)^+$, the solution of the Black-Scholes PDE is given by
+\begin{align*}
+    f(t,x)=x\Phi(d_+ (T-t))-Ke^{-(T-t)r}\Phi(d_- (T-t)),
+\end{align*}
+where
+\begin{align*}
+    \Phi(x)=\frac{1}{\sqrt{2\pi}} \int^x_{-\infty}e^{-y^2/2}dy, \qquad x\in \mathbb{R},
+\end{align*}
+and
+\begin{align*}
+    d_\pm (T-t) := \frac{\text{log}(x/K) + (r\pm \sigma^2/2)(T-t)}{|\sigma|\sqrt{T-t}}
+\end{align*}
+\end{tcolorbox}
+
+\newpage
+\section{Martingale Approach to Pricing and Hedging}
+\subsection{Prep}
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Proposition 7.1]
+The indefinite stochastic integral $\Big(\int^t_0 u_s dB_s\Big)_{t\in \mathbb{R}_+}$ of a square-integrable adapted process $u\in L^2_{ad}(\Omega \times \mathbb{R}_+)$ is a martingale, \textit{i.e.}:
+\begin{align*}
+    \mathbb{E}\bigg[\int^t_0 u_\tau dB_\tau \bigg|\mathcal{F}_s \bigg] = \int^s_0 u_\tau dB_\tau, \qquad 0\leq s \leq t
+\end{align*}
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Theorem 7.2; Girsanov Theorem]
+Let $(\phi_t)_{t\in [0,T]}$ be an adapted process satisfying the Novikov integrability condition
+\begin{align*}
+    \mathbb{E}\bigg[\text{exp}\bigg( \frac{1}{2} \int^T_0 |\psi_t|^2 dt\bigg) \bigg] < \infty,
+\end{align*}
+and let $\mathbb{Q}$ denote the probability measure defined by
+\begin{align*}
+    \frac{d\mathbb{Q}}{d\mathbb{P}} = \text{exp}\bigg(-\int^T_0 \psi_s dB_s -\frac{1}{2}\int^T_0 |\psi_s|^2 ds \bigg)
+\end{align*}
+Then
+\begin{align*}
+    \Hat{B}_t := B_t + \int^t_0 \psi_s ds, \qquad 0\leq t \leq T
+\end{align*}
+\end{tcolorbox}
+
+\newpage
+\subsection{Pricing by the Martingale Method}
+Recall that from the first fundamental theorem of mathematical finance, a continuous market is without arbitrate opportunities if there exist (at least) a risk-neutral probability measure $\mathbb{P}^*$ under which the discounted price process
+\begin{align*}
+    \Tilde{S}_t := e^{-rt}S_t, \qquad t \in \mathbb{R}_+
+\end{align*}
+is a martingale under $\mathbb{P}^*$. In addition, when the risk-neutral probability measure is unique, the market is said to be \textit{complete}.\\
+In case the price process $(S_t)_{t \in \mathbb{R}_+}$ satisfies the equation
+\begin{align*}
+    \frac{dS_t}{S_t} = \mu dt + \sigma dB_t, \qquad t\in \mathbb{R}_+, \qquad S_0 > 0
+\end{align*}
+we have
+\begin{align*}
+    S_t = S_0 e^{(\mu -\sigma^2/2)t +\sigma B_t}, \qquad t\in \mathbb{R}_+
+\end{align*}
+and the discounted price process
+\begin{align*}
+    \Tilde{S}_t := e^{-rt}S_t = S_0 e^{(\mu -r -\sigma^2/2)t +\sigma B_t}, \qquad t\in \mathbb{R}_+
+\end{align*}
+is a martingale under the probability measure $\mathbb{P}^*$ defined by
+\begin{align*}
+    \frac{d\mathbb{P}^*}{d\mathbb{P}} = \exp \bigg( -\frac{\mu -r}{\sigma} B_T -\frac{(\mu -r)^2}{2\sigma^2}T \bigg)
+\end{align*}
+which makes $\hat{B}_t := \frac{\mu -r}{\sigma}t +B_t$ a standard Brownian motion.\\
+Moreover, we have
+\begin{align*}
+    d\Tilde{S}_t &= (\mu -r) \Tilde{S}_t dt +\sigma \Tilde{S}_t dB_t\\
+    &= \sigma \Tilde{S}_t\bigg(\frac{\mu -r}{\sigma}dt +dB_t \bigg)\\
+    &= \sigma \Tilde{S}_t d\hat{B}_t, \qquad t \in \mathbb{R}_+
+\end{align*}
+hence the discounted value $\Tilde{V}_t$ of a self-financing portfolio can be written as
+\begin{align*}
+    \Tilde{V}_t &= \Tilde{V}_0 +\int^t_0 \xi_u d\Tilde{S}_u\\
+    &= \Tilde{V}_0 +\sigma \int^t_0 \xi_u \Tilde{S}_u d\hat{B}_u
+\end{align*}
+and by Proposition 7.1 it becomes a martingale under $\mathbb{P}^*$
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Theorem 7.3]
+Let $(\xi_t, \eta_t)_{t \in [0,T]}$ be a portfolio strategy with price
+\begin{align*}
+    V_t = \eta A_t + \xi_t S_t, \qquad t \in [0,T]
+\end{align*}
+and let $C$ be a contingent claim, such that
+\begin{enumerate}
+    \item $(\xi_t, \eta_t)_{t \in [0,T]}$ is a self-financing portfolio
+    \item $(\xi_t, \eta_t)_{t \in [0,T]}$ hedges the claim $C$, \textit{i.e.} we have $V_T = C$
+\end{enumerate}
+Then the arbitrage price of the claim $C$ is given by
+\begin{align*}
+    \pi_t (C) = V_t = e^{-(T-t)r} \mathbb{E}^*[C|\mathcal{F}_t], \qquad 0 \leq t \leq T
+\end{align*}
+where $\mathbb{E}^*$ denotes expectation under the risk-neutral probability measure $\mathbb{P}^*$.
+\end{tcolorbox}
+
+\underline{\textbf{Proof:}}\\
+Since the portfolio strategy $(\xi_t, \eta_t)_{t \in \mathbb{R}_+}$ is self-financing, we have
+\begin{align*}
+    \Tilde{
+    V}_t = \Tilde{
+    V}_0 +\sigma \int^t_0 \xi_u \Tilde{
+    S}_u d\hat{B}_u = \Tilde{
+    V}_0 +\int^t_0 \xi_u d\hat{S}_u, \qquad t \in \mathbb{R}_+
+\end{align*}
+which is a martingale under $\mathbb{P}^*$ from Proposition 7.1, hence
+\begin{align*}
+    \Tilde{V}_t &= \mathbb{E}^*[\Tilde{V}_T |\mathcal{F}_t]\\
+    &= e^{-rT}\mathbb{E}^*[V_T |\mathcal{F}_t]\\
+    &= e^{-rT}\mathbb{E}^*[C |\mathcal{F}_t]
+\end{align*}
+which implies
+\begin{align*}
+    V_t = e^{rt} \Tilde{V}_t = r^{-(T-t)r} \mathbb{E}^* [C|\mathcal{F}_t], \qquad 0 \leq t \leq T
+\end{align*}
+
+\begin{tcolorbox}[enhanced, drop fuzzy shadow, title=Proposition 7.4]
+The price at time $t$ of a European call option with strike price $K$ and maturity $T$ is given by
+\begin{align*}
+    C(t, S_t) = S_t \Phi\big(d_+(T-t)\big) -Ke^{-(T-t)r} \Phi\big(d_-(T-t)\big), \qquad 0 \leq t \leq T
+\end{align*}
+with
+\begin{align*}
+    d_\pm (T-t):= \frac{\log(x/K) +(r \pm \sigma^2/2)(T-t)}{\sigma \sqrt{T-t}}
+\end{align*}
+\end{tcolorbox}
+
+\underline{\textbf{Proof:}}\\
+Using the relation
+\begin{align*}
+    S_T = S_t e^{(r-\sigma^2/2)(T-t) +\sigma(\hat{B}_T -\hat{B}_t)}, \qquad 0\leq t \leq T
+\end{align*}
+by Theorem 7.3 the price of the portfolio hedging $C$ is given by
+\begin{align*}
+    V_t &= e^{-(T-t)r}\mathbb{E}^*[C|\mathcal{F}_t]\\
+    &= e^{-(T-t)r}\mathbb{E}^*[(S_T -K)^+|\mathcal{F}_t]\\
+    &= e^{-(T-t)r}\mathbb{E}^*[(S_t e^{(r-\sigma^2/2)(T-t) +\sigma(\hat{B}_T -\hat{B}_t)} -K)^+|\mathcal{F}_t] \\
+    &= e^{-(T-t)r}\mathbb{E}^*[(x e^{(r-\sigma^2/2)(T-t) +\sigma(\hat{B}_T -\hat{B}_t)} -K)^+]_{x=S_t}\\
+    &= e^{-(T-t)r}\mathbb{E}^*[(e^{m(x) +X} -K)^+]_{x=S_t}
+\end{align*}
+where 
+\begin{align*}
+    m(x):= (T-t)r -\frac{\sigma^2}{2}(T-t) +\log x
+\end{align*}
+and
+\begin{align*}
+    X := \sigma(\hat{B}_T -\hat{B}_t) \simeq \mathcal{N}(0,\sigma^2 (T-t))
+\end{align*}
+is a centered Gaussian random variable with variance
+\begin{align*}
+    \text{Var}[X] = \text{Var}[\sigma(\hat{B}_T -\hat{B}_t)] = \sigma^2\text{Var}[\hat{B}_T -\hat{B}_t] = \sigma^2 (T-t)
+\end{align*}
+under $\mathbb{P}^*$. Hence we have
+\begin{align*}
+    C(t,S_t) &= V_t\\
+    &= e^{-(T-t)r}\mathbb{E}^*[(e^{m(x) +X} -K)^+]_{x=S_t}\\
+    &= e^{-(T-t)r} e^{m(S_t)+\sigma^2(T-t)/2}\Phi\bigg(v + \frac{m(S_t) -\log K}{v}\bigg)\\
+    & \quad -Ke^{-(T-t)r}\Phi\bigg(\frac{m(S_t) -\log K}{v}\bigg)\\
+    &= S_t\Phi\bigg(v + \frac{m(S_t) -\log K}{v}\bigg) -Ke^{-(T-t)r}\Phi\bigg(\frac{m(S_t) -\log K}{v}\bigg)\\
+    &= S_t \Phi\big(d_+(T-t)\big) -Ke^{-(T-t)r} \Phi\big(d_-(T-t)\big), \qquad 0 \leq t \leq T
+\end{align*}
+
+
+
+
+
+\end{document}
